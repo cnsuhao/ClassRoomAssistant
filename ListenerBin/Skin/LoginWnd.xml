@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="446,308" caption="0,0,0,60" mininfo="446,308" maxinfo="446,308" roundcorner="5,5">
+    <Font name="微软雅黑" size="27" bold="false" italic="false" />
+    <Font name="微软雅黑" size="21" bold="false" italic="false" />
+    <Font name="微软雅黑" size="19" bold="false" italic="false" />
+    <VerticalLayout name="MainVer" bordersize="2" float="false" width="446" height="308" bordercolor="#FF656565">
+        <VerticalLayout name="TitleVer" bordersize="0" float="false" width="446" height="60" bkcolor="#FF383838">
+            <HorizontalLayout bordersize="0" float="false" width="446" height="15" />
+            <HorizontalLayout bordersize="0" float="false">
+                <Container bordersize="0" float="false" width="20" />
+                <Label name="lab_title" text="专递课堂助手" bordersize="0" float="false" width="176" height="37" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+                <Container bordersize="0" float="false" width="220" height="45" />
+                <Button name="btn_close" bordersize="0" float="false" width="20" height="20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="login_close.png" />
+                <Container bordersize="0" float="false" width="10" />
+            </HorizontalLayout>
+        </VerticalLayout>
+        <AnimationTabLayout name="TabLay" bordersize="2" bordercolor="#FF656565" float="false" animation_direction="horizontal" >
+            <VerticalLayout name="Tab1" float="false" bkcolor="#FFFFFFFF">
+                <HorizontalLayout name="IPHor" bordersize="0" float="false" width="446" height="50">
+                    <Label text="录播IP：" bordersize="0" float="true" pos="0,10,0,0" width="100" height="30" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" font="2" align="right" />
+                    <Edit name="ip" float="true" pos="115,10,0,0" width="280" height="30" bkcolor="#FFFFFFFF"  bordersize="1" bordercolor="#FF808080" textpadding="4,3,4,3" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout name="AccountHor" bordersize="0" float="false" height="50">
+                    <Label text="账号：" bordersize="0" float="true" pos="0,10,0,0" width="100" height="30" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" font="2" align="right" />
+                    <Edit name="user" float="true" pos="115,10,0,0" width="280" height="30" bkcolor="#FFFFFFFF"   bordersize="1" bordercolor="#FF808080" textpadding="4,3,4,3" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout name="PasswdHor" bordersize="0" float="false" height="50">
+                    <Label text="密码：" bordersize="0" float="true" pos="0,10,0,0" width="100" height="30" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" font="2" align="right" />
+                    <Edit name="passwd" float="true" pos="115,10,0,0" width="280" height="30" bkcolor="#FFFFFFFF"   bordersize="1" bordercolor="#FF808080" textpadding="4,3,4,3" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" password="true" />
+                </HorizontalLayout>
+                <HorizontalLayout name="OptionHor" bordersize="0" float="false">
+                    <Option name="opt_rem" bordersize="0" float="true" pos="115,9,0,0" width="21" height="21" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="opt_unselected.png" selectedimage="opt_selected.png" />
+                    <Option name="opt_auto" bordersize="0" float="true" pos="274,9,0,0" width="21" height="21" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="opt_unselected.png" selectedimage="opt_selected.png" />
+                    <Button name="btn_rem" text="记住密码" bordersize="0" float="true" pos="136,4,0,0" width="100" height="30" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" font="2" align="center" />
+                    <Button name="btn_auto" text="自动登录" bordersize="0" float="true" pos="295,4,0,0" width="100" height="30" textcolor="#FF656565" disabledtextcolor="#FFA7A6AA" font="2" align="center" />
+                </HorizontalLayout>
+                <HorizontalLayout name="LoginHor" bordersize="0" float="false" height="60">
+                    <Button name="btn_login" bordersize="1" borderround="5,5" text="登录" float="true" pos="123,10,0,0" width="200" height="40" bkcolor="#FF383838" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="1" align="center" />
+                </HorizontalLayout>
+            </VerticalLayout>
+            <VerticalLayout name="Tab2" bordersize="0" float="false" bkcolor="#FFFFFFFF">
+                <HorizontalLayout bordersize="0" float="false">
+                    <Label bordersize="1" name="lab_ico" bkimage="default_img.png"float="true" pos="168,39,0,0" width="110" height="110" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                </HorizontalLayout>
+                <HorizontalLayout bordersize="0" float="false" height="60">
+                    <Button name="btn_cancel" text="取消" bordersize="1" borderround="5,5" float="true" pos="123,10,0,0" width="200" height="40" bkcolor="#FF383838" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="1" align="center" />
+                </HorizontalLayout>
+            </VerticalLayout>
+			<VerticalLayout name="Tab3" bordersize="0" float="false" bkcolor="#FFFFFFFF">
+                <HorizontalLayout bordersize="0" float="false">
+                    <Text name="lab_tip" font="2" bordersize="0" float="true" pos="40,40,0,0" width="366" height="108" textpadding="2,0,2,0" textcolor="#FF383838" disabledtextcolor="#FFA7A6AA" align="centerwrap" />
+                </HorizontalLayout>
+                <HorizontalLayout bordersize="0" float="false" height="60">
+                    <Button name="btn_ok" text="确定" bordersize="1" borderround="5,5" float="true" pos="123,10,0,0" width="200" height="40" bkcolor="#FF383838" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="1" align="center" />
+                </HorizontalLayout>
+            </VerticalLayout>
+        </AnimationTabLayout>
+    </VerticalLayout>
+</Window>
