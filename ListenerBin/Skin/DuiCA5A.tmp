@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="1060,600" caption="0,0,0,50">
+    <Font name="微软雅黑" size="21" bold="false" italic="false" />
+    <Font name="微软雅黑" size="19" bold="false" italic="false" />
+    <Font name="微软雅黑" size="16" bold="false" italic="false" />
+    <VerticalLayout name="MainLay" bordersize="0" float="false" width="60" height="30">
+        <HorizontalLayout name="TitleLay" bordersize="0" float="false" height="50" bkcolor="#FF383838">
+            <Container bordersize="0" float="false" width="30" />
+            <Label name="lab_title" text="专递课堂助手" bordersize="0" float="false" width="170" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+            <HorizontalLayout name="NotifyLay" bordersize="0" float="false" width="300">
+                <Label name="lab_notify_ico" bordersize="0" float="true" pos="1,20,0,0" width="13" height="11" bkimage="notify_ico.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                <Label name="lab_notify" text="花都区实验小学上线啦" bordersize="0" float="true" pos="16,4,0,0" width="281" height="41" textcolor="#FFFFAE00" disabledtextcolor="#FFA7A6AA" font="2" />
+            </HorizontalLayout>
+            <HorizontalLayout bordersize="0" float="false" />
+            <Button name="btn_setting" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_setting_normal.png" hotimage="btn_setting_hot.png" pushedimage="btn_setting_pressed.png" />
+            <Button name="btn_min" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_min_normal.png" hotimage="btn_min_hot.png" pushedimage="btn_min_pressed.png" />
+            <Button name="btn_max" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_max_normal.png" hotimage="btn_max_hot.png" pushedimage="btn_max_pressed.png" />
+            <Button name="btn_close" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_close_normal.png" hotimage="btn_close_hot.png" pushedimage="btn_close_pressed.png" />
+            <Container bordersize="0" float="false" width="10" />
+        </HorizontalLayout>
+        <HorizontalLayout name="CenterLay" bordersize="0" float="false">
+            <VerticalLayout name="MainVer" bordersize="0" float="false">
+                <HorizontalLayout name="MainVideoLay" bordersize="0" float="false" bkcolor="#FF212121" />
+                <HorizontalLayout name="SubVideoLay" bordersize="0" float="false" height="190" bkcolor="#FF929292" />
+            </VerticalLayout>
+            <VerticalLayout name="ClassRoomLay" bordersize="0" float="false" width="190" bkcolor="#FF434343" />
+        </HorizontalLayout>
+    </VerticalLayout>
+</Window>

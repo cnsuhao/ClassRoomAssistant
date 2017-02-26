@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="1060,600" caption="0,0,0,50">
+    <Font name="微软雅黑" size="21" bold="false" italic="false" />
+    <Font name="微软雅黑" size="19" bold="false" italic="false" />
+    <Font name="微软雅黑" size="16" bold="false" italic="false" />
+    <VerticalLayout name="MainLay" bordersize="0" float="false" width="60" height="30">
+        <HorizontalLayout name="TitleLay" bordersize="0" float="false" height="50" bkcolor="#FF383838">
+            <Container bordersize="0" float="false" width="30" />
+            <Label name="lab_title" text="专递课堂助手" bordersize="0" float="false" width="170" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+            <HorizontalLayout name="NotifyLay" bordersize="0" float="false" width="300">
+                <Label name="lab_notify_ico" bordersize="0" float="true" pos="1,20,0,0" width="13" height="11" bkimage="notify_ico.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                <Label name="lab_notify" text="花都区实验小学上线啦" bordersize="0" float="true" pos="16,4,0,0" width="281" height="41" textcolor="#FFFFAE00" disabledtextcolor="#FFA7A6AA" font="2" />
+            </HorizontalLayout>
+            <HorizontalLayout bordersize="0" float="false" />
+            <Button name="btn_setting" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_setting_normal.png" hotimage="btn_setting_hot.png" pushedimage="btn_setting_pressed.png" />
+            <Button name="btn_min" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_min_normal.png" hotimage="btn_min_hot.png" pushedimage="btn_min_pressed.png" />
+            <Button name="btn_max" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_max_normal.png" hotimage="btn_max_hot.png" pushedimage="btn_max_pressed.png" />
+            <Button name="btn_close" bordersize="0" float="false" width="33" height="29" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_close_normal.png" hotimage="btn_close_hot.png" pushedimage="btn_close_pressed.png" />
+            <Container bordersize="0" float="false" width="10" />
+        </HorizontalLayout>
+        <HorizontalLayout name="CenterLay" bordersize="0" float="false">
+            <VerticalLayout name="MainVer" bordersize="0" float="false">
+                <HorizontalLayout name="MainVideoLay" bordersize="0" float="false" bkcolor="#FF212121">
+                    <VerticalLayout name="MediaLay" bordersize="0" float="false" />
+                    <VerticalLayout name="FunctionLay" bordersize="0" float="false" width="23">
+                        <Container bordersize="0" float="false" />
+                        <Button name="btn_expend" bordersize="0" float="false" width="23" height="61" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_unexpend_normal.png" hotimage="btn_unexpend_hot.png" pushedimage="btn_unexpend_pressed.png" />
+                        <Container bordersize="0" float="false" />
+                    </VerticalLayout>
+                </HorizontalLayout>
+                <HorizontalLayout name="SubVideoLay" bordersize="0" float="false" height="190" bkcolor="#FF929292">
+                    <HorizontalLayout name="Hor1" bordersize="0" float="false" bkcolor="#FF008080">
+                        <VerticalLayout name="SubLay1" bordersize="0" float="false" maxheight="190" maxwidth="170" minwidth="140" minheight="190">
+                            <HorizontalLayout name="SubSep01" bordersize="0" float="false" height="10" />
+                            <VerticalLayout name="SubVideoLay1" bordersize="0" float="false" />
+                            <HorizontalLayout name="SubSep10" bordersize="0" float="false" height="10" />
+                            <HorizontalLayout name="SubBtnLay1" bordersize="0" float="false" height="30">
+                                <Button name="btn_teacher1" text="老师" bordersize="0" float="false" width="60" height="30" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                                <Container bordersize="0" float="false" />
+                                <Button name="btn_student1" text="学生" bordersize="0" float="false" width="60" height="30" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                            </HorizontalLayout>
+                            <HorizontalLayout name="SubSep11" bordersize="0" float="false" height="10" />
+                        </VerticalLayout>
+                    </HorizontalLayout>
+                    <HorizontalLayout name="Hor2" bordersize="0" float="false" />
+                    <HorizontalLayout name="Hor3" bordersize="0" float="false" />
+                    <HorizontalLayout name="Hor4" bordersize="0" float="false" />
+                    <HorizontalLayout name="Hor5" bordersize="0" float="false" />
+                    <HorizontalLayout name="Hor6" bordersize="0" float="false" />
+                </HorizontalLayout>
+            </VerticalLayout>
+            <VerticalLayout name="ClassRoomLay" bordersize="0" float="false" width="190" bkcolor="#FF434343">
+                <VerticalLayout name="CalssRoomTitleLay" bordersize="0" float="false" height="31">
+                    <Label name="lab_ClassRoomTitle" text="教室列表" bordersize="0" float="false" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="2" align="center" />
+                    <Label name="lab_sep" bordersize="0" float="false" height="1" bkcolor="#FF808080" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                </VerticalLayout>
+                <VerticalLayout name="CalssRoomListLay" bordersize="0" float="false">
+                    <HorizontalLayout name="ListLay1" visible="false" bordersize="0" float="false">
+                        <Container bordersize="0" float="false" width="10" />
+                        <VerticalLayout bordersize="0" float="false">
+                            <Container bordersize="0" float="false" height="4" />
+                            <VerticalLayout bordersize="0" float="false" bkcolor="#FF383838">
+                                <HorizontalLayout bordersize="0" float="false" height="45">
+                                    <Button bordersize="0" float="false" width="45" height="45" bkimage="default_img.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    <VerticalLayout bordersize="0" float="false">
+                                        <Label text="秀全中学新校区" bordersize="0" float="false" height="23" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Label text="192.168.8.74" bordersize="0" float="false" height="22" textcolor="#FF9EA4A9" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    </VerticalLayout>
+                                </HorizontalLayout>
+                                <Label bordersize="0" float="false" height="1" bkcolor="#FFA0A0A4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                                <VerticalLayout bordersize="0" float="false">
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                    <HorizontalLayout bordersize="0" float="false" height="30">
+                                        <Container bordersize="0" float="false" />
+                                        <Button text="断开" bordersize="0" float="false" width="80" height="30" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Container bordersize="0" float="false" />
+                                    </HorizontalLayout>
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                </VerticalLayout>
+                            </VerticalLayout>
+                        </VerticalLayout>
+                        <Container bordersize="0" float="false" width="10" />
+                    </HorizontalLayout>
+                    <HorizontalLayout name="ListLay2" bordersize="0" float="false">
+                        <Container bordersize="0" float="false" width="10" />
+                        <VerticalLayout bordersize="0" float="false">
+                            <Container bordersize="0" float="false" height="4" />
+                            <VerticalLayout bordersize="0" float="false" bkcolor="#FF383838">
+                                <HorizontalLayout bordersize="0" float="false" height="45">
+                                    <Button bordersize="0" float="false" width="45" height="45" bkimage="default_img.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    <VerticalLayout bordersize="0" float="false">
+                                        <Label text="秀全中学新校区" bordersize="0" float="false" height="23" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Label text="192.168.8.74" bordersize="0" float="false" height="22" textcolor="#FF9EA4A9" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    </VerticalLayout>
+                                </HorizontalLayout>
+                                <Label bordersize="0" float="false" height="1" bkcolor="#FFA0A0A4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                                <VerticalLayout bordersize="0" float="false">
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                    <HorizontalLayout bordersize="0" float="false" height="30">
+                                        <Container bordersize="0" float="false" />
+                                        <Button text="断开" bordersize="0" float="false" width="80" height="30" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Container bordersize="0" float="false" />
+                                    </HorizontalLayout>
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                </VerticalLayout>
+                            </VerticalLayout>
+                        </VerticalLayout>
+                        <Container bordersize="0" float="false" width="10" />
+                    </HorizontalLayout>
+                    <HorizontalLayout name="ListLay3" bordersize="0" float="false">
+                        <Container bordersize="0" float="false" width="10" />
+                        <VerticalLayout bordersize="0" float="false">
+                            <Container bordersize="0" float="false" height="4" />
+                            <VerticalLayout bordersize="0" float="false" bkcolor="#FF383838">
+                                <HorizontalLayout bordersize="0" float="false" height="45">
+                                    <Button bordersize="0" float="false" width="45" height="45" bkimage="default_img.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    <VerticalLayout bordersize="0" float="false">
+                                        <Label text="秀全中学新校区" bordersize="0" float="false" height="23" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Label text="192.168.8.74" bordersize="0" float="false" height="22" textcolor="#FF9EA4A9" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    </VerticalLayout>
+                                </HorizontalLayout>
+                                <Label bordersize="0" float="false" height="1" bkcolor="#FFA0A0A4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                                <VerticalLayout bordersize="0" float="false">
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                    <HorizontalLayout bordersize="0" float="false" height="30">
+                                        <Container bordersize="0" float="false" />
+                                        <Button text="断开" bordersize="0" float="false" width="80" height="30" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Container bordersize="0" float="false" />
+                                    </HorizontalLayout>
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                </VerticalLayout>
+                            </VerticalLayout>
+                        </VerticalLayout>
+                        <Container bordersize="0" float="false" width="10" />
+                    </HorizontalLayout>
+                    <HorizontalLayout name="ListLay4" bordersize="0" float="false">
+                        <Container bordersize="0" float="false" width="10" />
+                        <VerticalLayout bordersize="0" float="false">
+                            <Container bordersize="0" float="false" height="4" />
+                            <VerticalLayout bordersize="0" float="false" bkcolor="#FF383838">
+                                <HorizontalLayout bordersize="0" float="false" height="45">
+                                    <Button bordersize="0" float="false" width="45" height="45" bkimage="default_img.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    <VerticalLayout bordersize="0" float="false">
+                                        <Label text="秀全中学新校区" bordersize="0" float="false" height="23" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Label text="192.168.8.74" bordersize="0" float="false" height="22" textcolor="#FF9EA4A9" disabledtextcolor="#FFA7A6AA" align="center" />
+                                    </VerticalLayout>
+                                </HorizontalLayout>
+                                <Label bordersize="0" float="false" height="1" bkcolor="#FFA0A0A4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                                <VerticalLayout bordersize="0" float="false">
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                    <HorizontalLayout bordersize="0" float="false" height="30">
+                                        <Container bordersize="0" float="false" />
+                                        <Button text="断开" bordersize="0" float="false" width="80" height="30" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                                        <Container bordersize="0" float="false" />
+                                    </HorizontalLayout>
+                                    <HorizontalLayout bordersize="0" float="false" />
+                                </VerticalLayout>
+                            </VerticalLayout>
+                        </VerticalLayout>
+                        <Container bordersize="0" float="false" width="10" />
+                    </HorizontalLayout>
+                </VerticalLayout>
+                <HorizontalLayout name="OptratorLay" bordersize="0" float="false" height="50">
+                    <Label name="lab_sep1" bordersize="0" float="false" height="1" bkcolor="#FFA0A0A4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                    <Button name="btn_start_class" text="开始上课" bordersize="0" float="true" pos="5,9,0,0" width="80" height="30" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="1" align="center" />
+                    <Button name="btn_end_class" text="结束课程" bordersize="0" float="true" pos="100,8,0,0" width="80" height="30" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="1" align="center" />
+                </HorizontalLayout>
+                <VerticalLayout name="statusLay" bordersize="0" float="false" width="190" height="93">
+                    <Label name="lab_sep2" bordersize="0" float="false" height="1" bkcolor="#FFA0A0A4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="lab_class_status" bordersize="0" float="true" pos="21,6,0,0" width="148" height="29" bkimage="remote_off.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="lab_date" text="2016-10-10" bordersize="0" float="true" pos="21,36,0,0" width="148" height="29" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
+                    <Label name="lab_time" text="16:33:55" bordersize="0" float="true" pos="21,65,0,0" width="148" height="29" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
+                </VerticalLayout>
+            </VerticalLayout>
+        </HorizontalLayout>
+    </VerticalLayout>
+</Window>

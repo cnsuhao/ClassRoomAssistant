@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassRoomListener", "ClassRoomListener\ClassRoomListener.vcxproj", "{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClassRoomSpeaker", "ClassRoomSpeaker\ClassRoomSpeaker.vcxproj", "{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DuiLib", "Duilib\DuiLib.vcxproj", "{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		UnicodeDebug|Win32 = UnicodeDebug|Win32
+		UnicodeRelease|Win32 = UnicodeRelease|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.Debug|Win32.Build.0 = Debug|Win32
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.Release|Win32.ActiveCfg = Release|Win32
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.Release|Win32.Build.0 = Release|Win32
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.UnicodeDebug|Win32.ActiveCfg = Debug|Win32
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.UnicodeDebug|Win32.Build.0 = Debug|Win32
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.UnicodeRelease|Win32.ActiveCfg = Release|Win32
+		{06D8EF4E-C6E7-4AD1-9602-861A5B98B346}.UnicodeRelease|Win32.Build.0 = Release|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.Debug|Win32.Build.0 = Debug|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.Release|Win32.ActiveCfg = Release|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.Release|Win32.Build.0 = Release|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.UnicodeDebug|Win32.ActiveCfg = Debug|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.UnicodeDebug|Win32.Build.0 = Debug|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.UnicodeRelease|Win32.ActiveCfg = Release|Win32
+		{A7CBBE8C-0468-4B4D-B29F-210A30636A6B}.UnicodeRelease|Win32.Build.0 = Release|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.Debug|Win32.Build.0 = Debug|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.Release|Win32.ActiveCfg = Release|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.Release|Win32.Build.0 = Release|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.UnicodeDebug|Win32.ActiveCfg = UnicodeDebug|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.UnicodeDebug|Win32.Build.0 = UnicodeDebug|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.UnicodeRelease|Win32.ActiveCfg = UnicodeRelease|Win32
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E}.UnicodeRelease|Win32.Build.0 = UnicodeRelease|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

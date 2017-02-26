@@ -1,0 +1,12 @@
+[192.168.8.237]
+path=192.168.8.237/ico.jpg
+[accout]
+cgi=demo.cgi?
+login_ip=192.168.8.235
+passwd=dmtlb
+user=admin
+[local]
+ip=192.168.8.237
+[server]
+port=4507
+server_ip=127.0.0.1
