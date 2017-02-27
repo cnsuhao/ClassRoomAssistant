@@ -34,14 +34,12 @@ int  _tWinMain(HINSTANCE hInstance,
 	CPaintManagerUI::SetInstance(hInstance);
 	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
 
-	/*LoginWnd *login = new LoginWnd();
+	LoginWnd *login = new LoginWnd();
 	login->Create(NULL, _T("µÇÂ¼"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);
-	login->SetIcon(IDI_ICON1);
+	//login->SetIcon(IDI_ICON1);
 	login->CenterWindow();
-	login->ShowModal();*/
-
-	/*UINT lres=login->ShowModal();
-	if (lres == 1)*/
+	UINT lres=login->ShowModal();
+	if (lres == 1)
 	{
 		MainView *mainview = new MainView();
 		mainview->Create(NULL, _T("mainPage"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);

@@ -1,27 +1,22 @@
 #pragma once
-#include "../expresshead.h"
-#include "../Video/Video.h"
-#include "../HttpRequst/HttpRequest.h"
-#include "../ConfigFile/ConfigFile.h"
-#include "../TCP/TCPSocket.h"
+#include "../Src/expresshead.h"
+#include "../Src/Video.h"
+#include "../Src/HttpRequest.h"
+#include "../Src/ConfigFile.h"
+#include "../Src/TCPSocket.h"
 #include <map>
+#include <set>
 #include <queue>
-#include <vector>
+#include <stack>
 
-struct _SmallVideoCtrl
-{
-	CLabelUI*	lab_title;
-	CButtonUI*	btn_sound;
-	CButtonUI*  btn_sound_off;
-	CVideoUI*	video;
-	union 
-	{
-		CButtonUI* btn_teacher;
-		CButtonUI* btn_ppt;
-	};
-	CButtonUI* btn_student;
-};
+#define UPDATE_PIC	1
+#define UPDATE_NAME 2
+#define UPDATE_MEM	3
+#define UPDATE_NONE -1
 
+
+#define  WM_REQUEST_JOIN	WM_USER+1000
+#define  WM_REQUEST_SPEAK	WM_USER+1001
 
 
 class CICOControlUI : public CLabelUI
@@ -32,8 +27,6 @@ public:
 	void PaintBkImage(HDC hDC)
 	{
 		__super::PaintBkImage(hDC);
-		/*if (m_sBkImage.IsEmpty()) return;
-		if (!DrawImage(hDC, (LPCTSTR)m_sBkImage)) m_sBkImage.Empty();*/
 		if (m_stranImage.IsEmpty()) return;
 		if (!DrawImage(hDC, (LPCTSTR)m_stranImage)) m_stranImage.Empty();
 	}
@@ -81,22 +74,51 @@ protected:
 
 };
 
-struct _classUnit
+class sepUI :public CHorizontalLayoutUI
 {
-	CICOControlUI* btn_ico;
-	CLabelUI* lab_title;
-	CLabelUI* lab_ip;
-	CButtonUI* btn_connect;
-	CVerticalLayoutUI *lay;
+public:
+	sepUI(int height = 5)
+	{
+		this->SetFixedHeight(height);
+	}
 };
 
-struct _classinfo
+class ManagerItem
 {
-	std::string dev_name;//设备名
-	std::string play_url;//播放地址(标清流)
-	std::string picture_path;//头像路径
-	_classUnit  class_ctrl;//容纳的控件
-	_SmallVideoCtrl class_video;
+public:
+	struct UI
+	{
+		classItemUI* item;
+		sepUI*	sep;
+	};
+	static void Add(CContainerUI* pContain, classItemUI* item);
+	static void Remove(CContainerUI* pContain, CDuiString ip);
+	static classItemUI* getItem(CDuiString ip);
+private:
+	static std::map<CDuiString, UI>mgr;
+};
+
+struct small_video
+{
+	CLabelUI* title;
+	CButtonUI* snd_on;
+	CButtonUI* snd_off;
+	CVideoUI *video;
+	union 
+	{
+		CButtonUI * teacher;
+	};
+	CButtonUI *student;
+};
+
+/* per classRoom data unit*/
+struct ItemData
+{
+	std::string ip;
+	std::string url;
+	std::string path;
+	std::string name;
+	small_video media;
 };
 
 class MainView :public WindowImplBase, public IListener
@@ -111,67 +133,71 @@ public:
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	CControlUI* CreateControl(LPCTSTR pstrClass);
+protected:
 	void Recv(SOCKET sock, const char* ip, const int port, char* data, int dataLength);
+
+	void Notify(TNotifyUI& msg);
+
+	void Init();
 	map<std::string, std::string> paraseCommand(const char* cmd);
 private:
-	void loadAllClassRoom();
-	void loadClassRoom(std::string ip);
-protected:
-	void Notify(TNotifyUI& msg);
+	CLabelUI *m_pData, *m_pTime, *m_pNotify;
+	CHorizontalLayoutUI *m_pNotifyLay;
+	CVerticalLayoutUI	*m_pCalssLay;
+	CLabelUI *m_pStateOn, *m_pStateOff;
+	CVideoUI *m_pVideo;
+	small_video video_list[6];
 private:
-	CLabelUI *lab_date, *lab_time,*lab_notice;;
-	_SmallVideoCtrl subVideo[6];
-	_classUnit classRoom[4];
+	ITCPClient *client;
 
-	//TCP客户端
-	ITCPClient* client;
-	void Init();
-	//初始化下方视频控件
-	void initSubVideo();
-	//初始化右侧教室列表控件
-	void initClassRoom();
-	void update_classroom();
-	void DisplayDateTime();
-	//更新配置
-	void updateConfigure();
+	/* save class-data in hash-table */
+	std::map<std::string, ItemData>class_list;
 
-	bool is_init;
-	//更新教室列表，保持一定的有序
-	void delete_classUI(_classinfo info,int current_mount);
-	void add_classUI(_classinfo info);
-	std::vector<std::string>ip_table;
-private:
-	std::string just_join;//刚刚加入的IP
-	std::string just_update_pic;
-	std::string just_speak_ip;//选择发言的IP
-	std::map<std::string, _classinfo>class_list;
+	/* select speak data*/
+	std::stack<ItemData>current_speak;
 
-	queue<_classinfo> class_queue;
-	vector<_classinfo> class_vec;
-	//初始化列表和视频控件
-	void init_vec();
-	//更新听课成员加入线程
-	HANDLE updateMenberJoin_thread;
-	//更新头像线程
-	HANDLE updatePicture_thread;
-	//切换流线程
-	HANDLE switch_view_thread;
-	//讲课端的播放地址
-	HANDLE local_thread;
-	
-	friend DWORD WINAPI updateJoin_Proc(_In_ LPVOID paramer);
-	friend DWORD WINAPI updatePicture_Proc(_In_ LPVOID paramer);
-	friend DWORD WINAPI LiveViewSwitch(_In_ LPVOID paramer);
-	friend DWORD WINAPI initLocalUrl(_In_ LPVOID paramer);
+	/* exception msg*/
+	std::string error_msg;
 
-private:
-	//学生-老师 画面切换
-	int current_index;
-	int current_view;
-	std::string local_url;
-	std::string local_durl;
+	/* online IP-list from TCP server*/
+	std::set<std::string>ip_list;
+
+	/* just join ip*/
+	std::string just_join_speak;
+	std::string just_join_update_pic;
+	std::string just_join_update_name;
+	std::string just_join_member;
+
+	/* VGA  & director stream*/
 	std::string vga_url;
-	void cut_view(int index, int view);
+	std::string durl;
+	/* update state [1:picture] [2:name] [3:member] [-1:none]*/
+	int current_update_state;
+
+	void load_local(const std::string ip);
+	void update_pic(const std::string ip);
+	void update_name(const std::string ip);
+	void get_url(const std::string ip);
+	void get_vgaurl(const std::string ip);
+	void get_durl(const std::string ip);
+	void selected_speak(const std::string ip);
+
+	void msg_coming(const std::string tip);
+
+	void DisplayDateTime();
+
+	void SoundStateOn(int index,bool is_on);
+
+	void init_videoList();
+
+	void update_connect_state(bool is_connect);
+private:
+	HANDLE init_thread;
+	HANDLE update_thread;
+	HANDLE release_thread;
+	friend DWORD WINAPI initProc(_In_ LPVOID paramer);
+	friend DWORD WINAPI updateProc(_In_ LPVOID paramer);
+	friend DWORD WINAPI releaseProc(_In_ LPVOID paramer);
 
 };
 

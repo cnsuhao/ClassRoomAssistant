@@ -66,7 +66,6 @@ LRESULT CVideoWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-
 RECT CVideoWnd::CalPos()
 {
 	return m_pOwner->GetPos();
@@ -122,6 +121,8 @@ void CVideoUI::Init()
 		ASSERT(m_pwindows);
 		m_pwindows->Init(this);
 	}	
+	media_play = ILivePlayer::GetInstance();
+	media_play->SetHWND(getHwnd());
 }
 
 void CVideoUI::fullSrc()
@@ -141,11 +142,18 @@ void CVideoUI::fullSrc()
 }
 bool CVideoUI::play(std::string url)
 {
-	return false;
+	if (!media_play->Load(url))
+	{
+		Sleep(300);
+		return media_play->Load(url);
+	}
+	return true;
+	
 }
 
 void CVideoUI::stop()
 {
+	media_play->Stop();
 }
 void CVideoUI::setVolume(int volume)
 {

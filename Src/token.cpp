@@ -1,5 +1,6 @@
 #include "token.h"
 #include "ConfigFile.h"
+
 strToken::tokenTable_type strToken::getInstance()
 {
 	return m_instance;

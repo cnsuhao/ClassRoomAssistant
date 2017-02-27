@@ -2,6 +2,7 @@
 #include "../Src/expresshead.h"
 #include "../Src/ConfigFile.h"
 #include <vector>
+#include "../Src/LoginWnd.h"
 class SettingView :public WindowImplBase
 {
 public:

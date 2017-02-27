@@ -153,7 +153,7 @@ void LoginWnd::OnReturn(TNotifyUI& msg)
 	else if (_ctrName == _T("ip"))
 	{
 		ConfigFile cfg(CFG_FILE);
-		cfg.addValue("ip", m_pEditIP->GetText().GetData(), "local");
+		cfg.addValue("login_ip", m_pEditIP->GetText().GetData(), "accout");
 		cfg.save();
 		LoadLocalData();
 	}
@@ -164,7 +164,7 @@ void LoginWnd::OnKillFocus(TNotifyUI& msg)
 	if (msg.pSender->GetName() == _T("ip"))
 	{
 		ConfigFile cfg(CFG_FILE);
-		cfg.addValue("ip", m_pEditIP->GetText().GetData(), "local");
+		cfg.addValue("login_ip", m_pEditIP->GetText().GetData(), "accout");
 		cfg.save();
 		LoadLocalData();
 	}
@@ -199,8 +199,8 @@ void LoginWnd::LoadLocalData()
 {
 	ConfigFile cfg(CFG_FILE);
 
-	m_pEditIP->SetText(cfg.getValue("ip", "local").c_str());
-	string ico_path = cfg.getValue("path", cfg.getValue("ip", "local"));
+	m_pEditIP->SetText(cfg.getValue("login_ip", "accout").c_str());
+	string ico_path = cfg.getValue("path", cfg.getValue("login_ip", "accout").c_str());
 	if (!ico_path.empty())
 	{
 		m_pLabImage->SetBkImage(ico_path.c_str());
@@ -254,7 +254,7 @@ LRESULT LoginWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	else if (uMsg == WM_LOGIN_OK)
 	{
 		OutputDebugStringA("login-ok");
-		Close(0);
+		Close(1);
 	}
 	else
 		return __super::HandleMessage(uMsg, wParam, lParam);
@@ -313,7 +313,7 @@ DWORD WINAPI LoginProc(_In_ LPVOID paramer)
 	db::Exec(sqlcmd, NULL);
 	db::Close();
 	ConfigFile cfg(CFG_FILE);
-	cfg.addValue("ip", l->m_pEditIP->GetText().GetData(), "local");
+	cfg.addValue("login_ip", l->m_pEditIP->GetText().GetData(), "accout");
 	cfg.save();
 	
 	::PostMessage(*l, WM_LOGIN_OK, NULL, NULL);
@@ -352,6 +352,15 @@ std::string Logan::login(std::string ip, std::string user, std::string pwd)
 
 bool Logan::logout(std::string ip, std::string user)
 {
+	std::string requestUrl = "http://" + ip + "/" + user_list::cgi + "type=logout&userName=" + user;
+	try
+	{
+		Logan::query_msg_node(requestUrl, ip);
+	}
+	catch (std::exception& e)
+	{
+		return false;
+	}
 	return true;
 }
 std::string Logan::parse_msg_node(std::string document)

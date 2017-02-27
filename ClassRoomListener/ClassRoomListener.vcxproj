@@ -104,6 +104,7 @@
     <ClInclude Include="..\Src\expresshead.h" />
     <ClInclude Include="..\Src\HttpRequest.h" />
     <ClInclude Include="..\Src\IMyCurl.h" />
+    <ClInclude Include="..\Src\LivePlayer.h" />
     <ClInclude Include="..\Src\LoginWnd.h" />
     <ClInclude Include="..\Src\MyCurl.h" />
     <ClInclude Include="..\Src\NotifyWnd.h" />
