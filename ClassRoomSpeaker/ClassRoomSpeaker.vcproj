@@ -18,10 +18,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\SpeakerBin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -89,10 +89,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\SpeakerBin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -166,22 +166,154 @@
 	</References>
 	<Files>
 		<Filter
-			Name="源文件"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="MianView"
 			>
+			<File
+				RelativePath=".\MainView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MainView.h"
+				>
+			</File>
 		</Filter>
 		<Filter
-			Name="头文件"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="SettingView"
 			>
+			<File
+				RelativePath=".\SettingView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingView.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="Src"
+			>
+			<File
+				RelativePath="..\Src\CMyCharConver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\ConfigFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\ConfigFile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\db.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\db.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\expresshead.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\HttpRequest.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\HttpRequest.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\IMyCurl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\LivePlayer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\LoginWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\LoginWnd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\MyCurl.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\MyCurl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\NotifyWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\NotifyWnd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\TCPSocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\TCPSocket.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\tinystr.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\tinystr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\tinyxml.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\tinyxml.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\tinyxmlerror.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\tinyxmlparser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\token.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\token.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Video.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\Video.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Src\WinMain.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

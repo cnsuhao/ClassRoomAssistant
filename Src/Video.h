@@ -1,5 +1,8 @@
 #pragma once
 #include "../Src/expresshead.h"
+
+#include "../Src/LivePlayer.h"
+
 #ifdef _DEBUG
 #pragma comment(lib,"../lib/LivePlayerD.lib")
 #else
@@ -43,8 +46,5 @@ private:
 	CVideoWnd *m_pwindows;
 	HWND oldParent;
 	bool is_full;
-	std::string playurl;
-public:
-	void work();
-
+	ILivePlayer *media_play;
 };

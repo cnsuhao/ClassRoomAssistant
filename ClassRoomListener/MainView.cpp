@@ -35,7 +35,6 @@ m_pVideo(NULL)
 	}
 	char data[] = "type=GetIpList";
 	client->sendData(data, strlen(data));
-
 }
 MainView::~MainView()
 {
@@ -82,6 +81,7 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 		if (res["type"] == "GetIpList")
 		{
 			string res_list=res["ip"];
+			selected_speak(res["ChatIp"]);
 			int pos = -1;
 			while ((pos = res_list.find_first_of(';')) != -1)
 			{
@@ -133,6 +133,7 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 				CloseHandle(update_thread);
 			}
 			just_join_member = res["ip"];
+			class_list[ip].ip = just_join_member;
 			if(just_join_member==user_list::ip)
 			{
 				m_pConnect->SetText(_T("断开连接"));
@@ -141,7 +142,6 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 					m_pVideo->stop();
 					m_pVideo->play(class_list[user_list::server_ip].url);
 				}
-				return;
 			}
 			update_thread = CreateThread(NULL, 0, updateProc, (void*)this, NULL, 0);
 		}
@@ -245,87 +245,40 @@ void MainView::Notify(TNotifyUI& msg)
 			CButtonUI *btn = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btn_expend")));
 			btn->SetVisible(true);
 		}
-			else if (msg.pSender->GetName()==_T("btn_setting"))
+		else if (msg.pSender->GetName()==_T("btn_setting"))
+		{
+			SettingView * setview = new SettingView;
+			setview->Create(*this, _T("Setting"), UI_WNDSTYLE_DIALOG, WS_EX_WINDOWEDGE);
+			setview->CenterWindow();
+			setview->ShowModal();			
+		}
+		else if (msg.pSender == m_pConnect)
+		{
+			if (msg.pSender->GetText() == _T("请求连接"))
 			{
-				SettingView * setview = new SettingView;
-				setview->Create(*this, _T("Setting"), UI_WNDSTYLE_DIALOG, WS_EX_WINDOWEDGE);
-				setview->CenterWindow();
-				setview->ShowModal();			
+				string str = "type=RequestJoin&ip=" + user_list::ip;
+				char data[50];
+				strcpy(data, str.c_str());
+				client->sendData(data, strlen(data));
 			}
-		//	else if(msg.pSender->GetName()==_T("btn_request_connect") &&msg.pSender->GetText()==_T("请求连接"))
-		//	{
-		//		//请求连接
-		//		string data = "type=RequestJoin&ip="+login_ip;
-		//		char cdata[100];
-		//		strcpy(cdata, data.c_str());
-		//		client->sendData(cdata, strlen(cdata));
-		//	}
-		//	else if (msg.pSender->GetName() == _T("btn_request_connect") && msg.pSender->GetText() == _T("断开连接"))
-		//	{
-		//		//断开连接
-		//		string data = "type=QuitMeeting&ip=" + login_ip;
-		//		char cdata[100];
-		//		strcpy(cdata, data.c_str());
-		//		// <modify play stream url>
-		//		client->sendData(cdata, strlen(cdata));
-		//		msg.pSender->SetText(_T("请求连接"));
-		//	}
-		//	else if (msg.pSender->GetName() == _T("btn_request_interact"))
-		//	{
-		//		//请求互动发言
-		//		string data = "type=RequestSpeak&ip=" + login_ip;
-		//		char cdata[100];
-		//		strcpy(cdata, data.c_str());
-		//		client->sendData(cdata, strlen(cdata));
-		//	}
-
-		//}
-		//else if (msg.sType==_T("online"))
-		//{
-		//	CHorizontalLayoutUI* hor_notify = static_cast<CHorizontalLayoutUI*>(m_PaintManager.FindControl(_T("NotifyLay")));
-		//	hor_notify->SetVisible(true);
-		//	PlaySound(_T("mgg.wav"), NULL, SND_ASYNC);
-		//	SetTimer(*this, TIME_ID_NOTIFY, 400, NULL);
-		//}
-		//else if (msg.sType == _T("initclassroom"))
-		//{
-		//	// update class UI
-		//	classRoom[0].lab_title->SetText(class_room_list[class_ip].class_name.c_str());
-		//	classRoom[0].btn_ico->SetBkImage((class_ip + "/" + class_room_list[class_ip].ico_path).c_str());
-		//	int named = 2;
-		//	for (map<string, remote_class_info>::iterator it = class_room_list.begin(); it != class_room_list.end(); it++)
-		//	{
-		//		if (it->first != class_ip && named<=5)
-		//		{
-		//			char ver_name[20];
-		//			sprintf(ver_name, "ver%d", named);
-		//			CVerticalLayoutUI* ver = static_cast<CVerticalLayoutUI*>(m_PaintManager.FindControl(ver_name));
-		//			ver->SetVisible(true);
-		//			classRoom[named - 1].lab_ip->SetText(it->first.c_str());
-		//			classRoom[named - 1].lab_title->SetText(it->second.class_name.c_str());
-		//			if (it->second.ico_path.length()>2)
-		//				classRoom[named - 1].btn_ico->SetBkImage((it->first + "/" + it->second.ico_path).c_str());
-		//			++named;
-		//		}
-		//	}
-
-		//}
-		//else if (msg.sType == _T("update_dev"))
-		//{
-		//	CHorizontalLayoutUI* hor_notify = static_cast<CHorizontalLayoutUI*>(m_PaintManager.FindControl(_T("NotifyLay")));
-		//	hor_notify->SetVisible(true);
-		//	lab_notice->SetText(_T("名称有了新的更新"));
-		//	PlaySound(_T("mgg.wav"), NULL, SND_ASYNC);
-		//	SetTimer(*this, TIME_ID_NOTIFY, 400, NULL);
-		//}
-		//else if (msg.sType == _T("update_ico"))
-		//{
-		//	CHorizontalLayoutUI* hor_notify = static_cast<CHorizontalLayoutUI*>(m_PaintManager.FindControl(_T("NotifyLay")));
-		//	hor_notify->SetVisible(true);
-		//	lab_notice->SetText(_T("头像有了新的更新"));
-		//	PlaySound(_T("mgg.wav"), NULL, SND_ASYNC);
-		//	SetTimer(*this, TIME_ID_NOTIFY, 400, NULL);
-		//}
+			else
+			{
+				string str = "type=QuitMeeting&ip=" + user_list::ip;
+				char data[50];
+				strcpy(data, str.c_str());
+				client->sendData(data, strlen(data));
+				ManagerItem::Remove(m_pCalssLay, user_list::ip.c_str());
+				msg.pSender->SetText(_T("请求连接"));
+			}
+			
+		}
+		else if (msg.pSender==m_pHudong)
+		{
+			string str = "type=RequestSpeak&ip=" + user_list::ip;
+			char data[50];
+			strcpy(data, str.c_str());
+			client->sendData(data, strlen(data));
+		}
 	}
 	else if(msg.sType==DUI_MSGTYPE_DBCLICK)
 	{
@@ -354,22 +307,30 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		TipMsg::ShowMsgWindow(*this, error_msg.c_str());
 	}
-	//else if (uMsg == WM_UPDATE_ICO)
-	//{
-	//	//更新头像消息
-	//	string data = "type=UpdatePicture&ip=" + login_ip;
-	//	char cdata[200];
-	//	strcpy(cdata, data.c_str());
-	//	client->sendData(cdata, strlen(cdata));
-	//}
-	//else if (uMsg == WM_ADDED_SUCCESS)
-	//{
-	//	//加入听课成功
-	//	CButtonUI* btn_request = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btn_request_connect")));
-	//	CLabelUI* lab_state = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lab_class_status")));
-	//	lab_state->SetBkImage(_T("remote_off.png"));
-	//	btn_request->SetText(_T("断开连接"));
-	//}
+	else if (uMsg == WM_UPDATE_DEVNAME || uMsg == WM_UPDATE_ICO)
+	{
+		load_local(user_list::ip);
+		classItemUI *item = ManagerItem::getItem(user_list::ip.c_str());
+		if (uMsg == WM_UPDATE_ICO)
+		{
+			if (item)
+				item->setImage(class_list[user_list::ip].path.c_str());
+			std::string str = "type = UpdatePicture&ip =" + user_list::ip;
+			char data[50];
+			strcpy(data, str.c_str());
+			client->sendData(data, strlen(data));
+		}
+		else
+		{
+			if (item)
+				item->setTitle(class_list[user_list::ip].name.c_str());
+			std::string str = "type=UpdateDevName&ip=x" + user_list::ip + "&name=" + class_list[user_list::ip].name;
+			char data[50];
+			strcpy(data, str.c_str());
+			client->sendData(data, strlen(data));
+		}
+
+	}
 	else
 		return __super::HandleMessage(uMsg, wParam, lParam);
 }
@@ -406,10 +367,15 @@ void MainView::Init()
 	m_pServerIP = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("server_ip")));
 	m_pServerName = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("server_name")));
 	m_pServerPic = static_cast<CICOControlUI*>(m_PaintManager.FindControl(_T("server_ico")));
+	m_pConnect = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btn_request_connect")));
+	m_pHudong = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btn_request_interact")));
 
 	m_pStateOn = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lab_class_status_on")));
 	m_pStateOff = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lab_class_status")));
+
 	m_pVideo = static_cast<CVideoUI*>(m_PaintManager.FindControl(_T("mainVideo")));
+
+	
 
 	/* hide notify lay*/
 	m_pNotifyLay->SetVisible(false);
@@ -443,6 +409,7 @@ void MainView::load_local(const std::string ip)
 	/* load pic*/
 	ConfigFile cf(CFG_FILE);
 	std::string picPath = cf.getValue("path", ip);
+	class_list[ip].ip = ip;
 	if(picPath.empty ())
 	{
 		try
@@ -486,14 +453,17 @@ void MainView::update_pic(const std::string ip)
 		std::string picName = Logan::query_msg_node(requestPicNameUrl, ip);
 		std::string downloadUrl = "http://" + ip + "/" + picName;
 		CreateDirectoryA(ip.c_str(), NULL);
-		std::string path = ip + "/" + picName;
-		if(!Logan::download (downloadUrl,path))
+		if (!picName.empty())// if no picture on server
 		{
-			throw std::exception("download error");
+			std::string path = ip + "/" + picName;
+			if (!Logan::download(downloadUrl, path))
+			{
+				throw std::exception("download error");
+			}
+			ConfigFile cf(CFG_FILE);
+			cf.addValue("path", path, ip);
+			cf.save();
 		}
-		ConfigFile cf(CFG_FILE);
-		cf.addValue("path", path, ip);
-		cf.save();
 	}
 	catch (std::exception& e)
 	{
@@ -534,7 +504,8 @@ void MainView::selected_speak(const std::string ip)
 		current_speak.push(class_list[ip]);
 	}
 	classItemUI *item = ManagerItem::getItem(ip.c_str());
-	item->SetText(_T("发言中"));
+	if (item)
+		item->SetText(_T("发言中"));
 }
 
 
@@ -563,8 +534,11 @@ void MainView::DisplayDateTime()
 
 void MainView::update_connect_state(bool is_connect)
 {
-	m_pStateOn->SetVisible(is_connect);
-	m_pStateOff->SetVisible(!is_connect);
+	if (m_pStateOn &&m_pStateOff)
+	{
+		m_pStateOn->SetVisible(is_connect);
+		m_pStateOff->SetVisible(!is_connect);
+	}
 }
 
 DWORD WINAPI initProc(_In_ LPVOID paramer)
@@ -577,7 +551,7 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		p->get_url(user_list::ip);
 		p->load_local(user_list::server_ip);
 		p->get_url(user_list::server_ip);
-
+		p->m_pServerPic->SetBkImage(p->class_list[user_list::server_ip].path.c_str());
 		if (!p->class_list[user_list::ip].url.empty())
 		{
 			p->m_pVideo->stop();
@@ -586,11 +560,13 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		/* then get info from network*/
 		for (std::set<std::string>::iterator itor = p->ip_list.begin(); itor != p->ip_list.end();itor++)
 		{
+			CreateDirectoryA(itor->c_str(), NULL);
 			if(*itor!=user_list::ip)
 			{
 				p->load_local(*itor);
+				p->class_list[*itor].ip = *itor;
 				classItemUI *item = new classItemUI;
-				item->setIp(p->class_list[*itor].ip.c_str());
+				item->setIp(itor->c_str());
 				if (!p->class_list[*itor].path.empty())
 					item->setImage(p->class_list[*itor].path.c_str());
 				item->setTitle(p->class_list[*itor].name.c_str());
@@ -599,12 +575,13 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 			else
 			{
 				classItemUI *item = new classItemUI;
-				item->setIp(p->class_list[*itor].ip.c_str());
+				item->setIp(itor->c_str());
 				if (!p->class_list[*itor].path.empty())
 					item->setImage(p->class_list[*itor].path.c_str());
 				item->setTitle(p->class_list[*itor].name.c_str());
 				ManagerItem::Add(p->m_pCalssLay, item);
 				p->m_pConnect->SetText(_T("断开连接"));
+				p->update_connect_state(true);
 				if (!p->class_list[*itor].url.empty())
 				{
 					p->m_pVideo->stop();

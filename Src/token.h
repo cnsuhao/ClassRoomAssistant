@@ -17,12 +17,16 @@ public:
 	value_type getValue(key_type id);
 	value_type operator[](key_type id);
 private:
-	std::map<key_type, value_type>token_table;
+	static std::map<key_type, value_type>token_table;
 };
+
+template<typename unique_id, typename type_value>
+std::map<unique_id, type_value> TokenSystem<unique_id, type_value>::token_table;
 
 template<typename unique_id, typename type_value>
 TokenSystem<unique_id, type_value>::TokenSystem<unique_id, type_value>()
 {
+
 }
 
 template<typename unique_id, typename type_value>

@@ -1,8 +1,8 @@
 #pragma once
-#include "../expresshead.h"
-#include "../ConfigFile/ConfigFile.h"
+#include "../Src/expresshead.h"
+#include "../Src/ConfigFile.h"
 #include <vector>
-#include "../NotifyView/NotifyWnd.h"
+#include "../Src/NotifyWnd.h"
 class SettingView :public WindowImplBase
 {
 public:

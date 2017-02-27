@@ -3,6 +3,7 @@
 #include <exception>
 
 #define  WM_LOGIN_OK WM_USER+100
+
 class Logan
 {
 public:

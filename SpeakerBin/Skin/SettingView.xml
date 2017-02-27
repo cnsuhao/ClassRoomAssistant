@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="500,370" caption="0,0,0,50" mininfo="500,370" maxinfo="500,370" roundcorner="6,6">
+    <Font name="微软雅黑" size="21" bold="false" italic="false" />
+    <VerticalLayout bordersize="0" float="false" width="60" height="30" bkcolor="#FF5B5B5B">
+        <HorizontalLayout name="Title_Lay" bordersize="0" float="false" height="50" bkcolor="#FF383838">
+            <Container bordersize="0" float="false" width="30" />
+            <Label text="设置" bordersize="0" float="false" textcolor="#FF9EA4A9" disabledtextcolor="#FFA7A6AA" font="0" />
+            <HorizontalLayout bordersize="0" float="false" width="50" height="50">
+                <Button name="btn_close" bordersize="0" float="true" pos="20,8,0,0" width="20" height="20" bkimage="login_close.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+            </HorizontalLayout>
+        </HorizontalLayout>
+        <HorizontalLayout name="MainLay" bordersize="0" float="false">
+            <VerticalLayout name="LestSep" bordersize="0" float="false" width="30" />
+            <VerticalLayout name="MidLay" bordersize="0" float="false">
+                <HorizontalLayout name="UpSep" bordersize="0" float="false" height="20" />
+                <HorizontalLayout bordersize="0" float="false">
+                    <Button name="btn_ico" bordersize="0" float="false" width="110" height="110" bkimage="default_img.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                    <VerticalLayout bordersize="0" float="false">
+                        <HorizontalLayout bordersize="0" float="false" />
+                        <HorizontalLayout bordersize="0" float="false" height="30">
+               
+                        </HorizontalLayout>
+                        <HorizontalLayout bordersize="0" float="false" height="30">
+                            <Container bordersize="0" float="false" width="37" height="30" />
+                            <Button bordersize="0" name="btn_upload" float="false" width="80" height="30" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_upload_normal.png" hotimage="btn_upload_hot.png" pushedimage="btn_upload_pressed.png" />
+                            <Label text="名称：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                            <Edit name="edit_name" borderround="5,5" text="广州乐庚信息科技有限公司" bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FF800080" align="center" />
+                        </HorizontalLayout>
+                    </VerticalLayout>
+                </HorizontalLayout>
+                <HorizontalLayout bordersize="0" float="false" height="15" />
+                <HorizontalLayout bordersize="0" float="false" height="30">
+                    <Label text="远程IP地址设置" bordersize="0" float="false" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout bordersize="0" float="false" height="30">
+                    <Label text="    远程1：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA"  />
+                    <Container bordersize="0" float="false" width="20" />
+                    <Edit name="edit_remote1"  borderround="5,5" text="192.168.8.114" bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                    <Container bordersize="0" float="false" width="16" />
+                    <Label text="    远程2：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA"  />
+                    <Container bordersize="0" float="false" width="20" />
+                    <Edit name="edit_remote2"  borderround="5,5" text="192.168.8.115" bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                </HorizontalLayout>
+                <HorizontalLayout bordersize="0" float="false" height="5" />
+                <HorizontalLayout bordersize="0" float="false" height="30">
+                    <Label text="    远程3：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA"  />
+                    <Container bordersize="0" float="false" width="20" />
+                    <Edit name="edit_remote3"  borderround="5,5" text="192.168.8.116" bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                    <Container bordersize="0" float="false" width="16" />
+                    <Label text="    远程4：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA"  />
+                    <Container bordersize="0" float="false" width="20" />
+                    <Edit name="edit_remote4"  borderround="5,5" text="192.168.8.117" bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+                </HorizontalLayout>
+                <HorizontalLayout bordersize="0" float="false" height="5" />
+                <HorizontalLayout bordersize="0" float="false" height="30">
+                    <Label text="   录播IP：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA"  />
+                    <Container bordersize="0" float="false" width="20" />
+                    <Edit name="edit_lubo_IP"  borderround="5,5" text="192.168.1.2" bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout bordersize="0" float="false" height="5" />
+                <HorizontalLayout bordersize="0" float="false" height="30">
+                    <Label text=" 云平台IP：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA"  />
+                    <Container bordersize="0" float="false" width="20" />
+                    <Edit name="edit_cloud_IP"  borderround="5,5" text="192.168.3.5" bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" />
+                </HorizontalLayout>
+                <HorizontalLayout name="DownSep" bordersize="0" float="false" height="10" />
+            </VerticalLayout>
+            <VerticalLayout name="RightSep" bordersize="0" float="false" width="30" />
+        </HorizontalLayout>
+    </VerticalLayout>
+</Window>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="250,150" caption="0,0,0,30" mininfo="250,150" maxinfo="250,150" roundcorner="5,5">
+    <Font name="隶书" size="19" bold="false" italic="false" />
+    <VerticalLayout bordersize="0" float="false" width="60" height="30" bkcolor="#FF5B5B5B">
+        <HorizontalLayout bordersize="0" float="false" width="251" height="30" bkcolor="#FF383838">
+            <Label name="lab_title" text="提示" bordersize="0" float="false" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
+        </HorizontalLayout>
+		<VerticalLayout>
+			<Label name="time_out" visible="false" width="20" width="250" float="false" align="center" textcolor="#FFFFFFFF" />
+			<Label name="lab_tip" text="提示信息" bordersize="0" float="false" width="250" textcolor="#FFFFFFFF" height="60" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
+		</VerticalLayout>
+        <HorizontalLayout bordersize="0" float="false" height="30">
+            <Container bordersize="0" float="false" width="10" />
+            <Button name="btn_ok"  borderround="5,5" text="确认" bordersize="0" float="false" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+            <Container bordersize="0" float="false" width="50" />
+            <Button name="btn_cancel" borderround="5,5" text="取消" bordersize="0" float="false" bkcolor="#FF171717" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
+            <Container bordersize="0" float="false" width="10" />
+        </HorizontalLayout>
+        <HorizontalLayout bordersize="0" float="false" height="10" />
+    </VerticalLayout>
+</Window>
