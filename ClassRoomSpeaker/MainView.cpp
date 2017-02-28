@@ -152,8 +152,8 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			msg_coming(class_list[res["ip"]].name + "退出了");
 			if (!class_list[user_list::ip].url.empty())
 			{
-				m_pVideo->stop();
-				m_pVideo->play(class_list[user_list::ip].url);
+				//m_pVideo->stop();
+				//m_pVideo->play(class_list[user_list::ip].url);
 			}
 			class_list.erase(class_list.find(res["ip"]));
 			if (class_list.find(user_list::ip) == class_list.end())
@@ -988,23 +988,24 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		/* play main video*/
 		if (!p->class_list[user_list::ip].url.empty())
 		{
-			p->m_pVideo->stop();
+			//p->m_pVideo->stop();
 			p->m_pVideo->play(p->class_list[user_list::ip].url);
 		}
-		/* play vga(PPT) stream*/
-		p->video_list[5].title->SetText(_T("PPT"));
-		if (!p->vga_url.empty())
-		{
-			p->video_list[5].video->stop();
-			p->video_list[5].video->play(p->vga_url);
-		}
-
 		/* play director stream*/
+		Sleep(300);
 		p->video_list[4].title->SetText(_T("本地导播"));
 		if (!p->durl.empty())
 		{
-			p->video_list[4].video->stop();
+			//p->video_list[4].video->stop();
 			p->video_list[4].video->play(p->durl);
+		}
+		/* play vga(PPT) stream*/
+		Sleep(300);
+		p->video_list[5].title->SetText(_T("PPT"));
+		if (!p->vga_url.empty())
+		{
+			//p->video_list[5].video->stop();
+			p->video_list[5].video->play(p->vga_url);
 		}
 		/* then get info from network*/
 		for (std::set<std::string>::iterator itor = p->ip_list.begin(); itor != p->ip_list.end(); itor++)
@@ -1025,7 +1026,8 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 			++index;
 			if (!p->class_list[*itor].url.empty())
 			{
-				p->class_list[*itor].media.video->stop();
+				//p->class_list[*itor].media.video->stop();
+				Sleep(300);
 				p->class_list[*itor].media.video->play(p->class_list[*itor].url);
 			}
 		}
@@ -1111,11 +1113,12 @@ LPCTSTR classItemUI::getTitle()const
 void classItemUI::setIp(LPCTSTR pstr_ip)
 {
 	m_pIP->SetText(pstr_ip);
+	m_strIP = pstr_ip;
 }
 
 LPCTSTR classItemUI::getIP()const
 {
-	return m_pIP->GetText();
+	return m_strIP/*m_pIP->GetText()*/;
 }
 
 void classItemUI::setImage(LPCTSTR pstr_image)
