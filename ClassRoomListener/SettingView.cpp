@@ -143,7 +143,7 @@ void SettingView::Init()
 void SettingView::OnUpload()
 {
 	std::string uploadUrl = "http://" + user_list::ip + "/upload.cgi?type=uploadpicture";
-	if (!local_fileName.empty())
+	if (Logan::file_exist(local_fileName))
 	{
 		Logan::upload(uploadUrl, user_list::ip, local_fileName);
 		::PostMessage(::GetParent(*this), WM_UPDATE_ICO,NULL,NULL);

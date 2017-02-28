@@ -123,6 +123,7 @@ void CVideoUI::Init()
 	}	
 	media_play = ILivePlayer::GetInstance();
 	media_play->SetHWND(getHwnd());
+	media_play->SetListener(this);
 }
 
 void CVideoUI::fullSrc()
@@ -140,12 +141,41 @@ void CVideoUI::fullSrc()
 	}
 	is_full = !is_full;
 }
+
+void CVideoUI::HandlePlayerMsg(int nMsg, WPARAM wParam /* = 0 */, LPARAM lParam /* = 0 */)
+{
+	switch (nMsg)
+	{
+	case PlayerMsg_Volume :
+		break;
+	case PlayerMsg_File:
+		OutputDebugStringA("Player::[PlayerMsg_File]\n");
+		is_played = (bool)wParam;
+		break;
+	case PlayerMsg_Pos:
+		OutputDebugStringA("Player::[PlayerMsg_Pos]\n");
+		//if (wParam >= 0.1)
+			//is_played = true;
+		break;
+	case PlayerMsg_End:
+		OutputDebugStringA("Player::[PlayerMsg_End]\n");
+		is_played = false;
+		break;
+	case PlayerMsg_Error:
+		OutputDebugStringA("Player::[PlayerMsg_Error]\n");
+		is_played = false;
+		break;
+	default:
+		break;
+	}
+}
+
 bool CVideoUI::play(std::string url)
 {
 	if (!media_play->Load(url))
 	{
-		Sleep(300);
-		return media_play->Load(url);
+	Sleep(300);
+	return media_play->Load(url);
 	}
 	return true;
 	
@@ -157,9 +187,15 @@ void CVideoUI::stop()
 }
 void CVideoUI::setVolume(int volume)
 {
+	media_play->SetVolume(volume);
 }
 void CVideoUI::setMute(bool mute)
 {
+	media_play->SetMute(mute);
+}
+bool CVideoUI::is_playing()
+{
+	return is_played;
 }
 
 void CVideoUI::flushBk()

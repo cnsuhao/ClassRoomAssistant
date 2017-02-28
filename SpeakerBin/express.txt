@@ -1,5 +1,6 @@
 [accout]
 cgi=demo.cgi?
+login_ip=
 passwd=dmtlb
 user=admin
 [server]

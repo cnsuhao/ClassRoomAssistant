@@ -53,9 +53,7 @@ MainView::~MainView()
 	{
 		CloseHandle(update_thread);
 	}
-	 /* make all-user logout*/
-	release_thread = CreateThread(NULL, 0, releaseProc, this, NULL,NULL);
-	WaitForSingleObject(release_thread, 5000);
+	
 }
 
 LPCSTR  MainView::GetWindowClassName() const
@@ -81,7 +79,7 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 		if (res["type"] == "GetIpList")
 		{
 			string res_list=res["ip"];
-			selected_speak(res["ChatIp"]);
+			chat_ip = res["ChatIp"];
 			int pos = -1;
 			while ((pos = res_list.find_first_of(';')) != -1)
 			{
@@ -134,15 +132,6 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			}
 			just_join_member = res["ip"];
 			class_list[ip].ip = just_join_member;
-			if(just_join_member==user_list::ip)
-			{
-				m_pConnect->SetText(_T("断开连接"));
-				if (!class_list[user_list::ip].url.empty())
-				{
-					m_pVideo->stop();
-					m_pVideo->play(class_list[user_list::server_ip].url);
-				}
-			}
 			update_thread = CreateThread(NULL, 0, updateProc, (void*)this, NULL, 0);
 		}
 		else if (res["type"] == "QuitMeeting")
@@ -152,7 +141,8 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			if (!class_list[user_list::ip].url.empty())
 			{
 				m_pConnect->SetText(_T("请求连接"));
-				m_pVideo->stop();
+				if (m_pVideo->is_playing())
+					m_pVideo->stop();
 				m_pVideo->play(class_list[user_list::ip].url);
 			}
 			class_list.erase(class_list.find(res["ip"]));
@@ -225,7 +215,9 @@ void MainView::Notify(TNotifyUI& msg)
 			char data[50];
 			strcpy(data, str.c_str());
 			client->sendData(data,strlen(data));
-			Sleep(300);
+			/* make all-user logout*/
+			release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
+			WaitForSingleObject(release_thread, 5000);
 			Close();
 			}
 		}
@@ -309,22 +301,23 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	else if (uMsg == WM_UPDATE_DEVNAME || uMsg == WM_UPDATE_ICO)
 	{
-		load_local(user_list::ip);
 		classItemUI *item = ManagerItem::getItem(user_list::ip.c_str());
 		if (uMsg == WM_UPDATE_ICO)
 		{
+			update_pic(user_list::ip);
 			if (item)
 				item->setImage(class_list[user_list::ip].path.c_str());
-			std::string str = "type = UpdatePicture&ip =" + user_list::ip;
+			std::string str = "type=UpdatePicture&ip=" + user_list::ip;
 			char data[50];
 			strcpy(data, str.c_str());
 			client->sendData(data, strlen(data));
 		}
 		else
 		{
+			update_name(user_list::ip);
 			if (item)
 				item->setTitle(class_list[user_list::ip].name.c_str());
-			std::string str = "type=UpdateDevName&ip=x" + user_list::ip + "&name=" + class_list[user_list::ip].name;
+			std::string str = "type=UpdateDevName&ip=" + user_list::ip + "&name=" + class_list[user_list::ip].name;
 			char data[50];
 			strcpy(data, str.c_str());
 			client->sendData(data, strlen(data));
@@ -394,9 +387,9 @@ void MainView::update_name(const std::string ip)
 	{
 		std::string name = Logan::query_msg_node(requestUrl, ip);
 		class_list[ip].name = name;
-		ConfigFile cf(CFG_FILE);
-		cf.addValue("name", name, ip);
-		cf.save();
+		ConfigFile cfg(CFG_FILE);
+		cfg.addValue("name", name,ip);
+		cfg.save();
 	}
 	catch (std::exception& e)
 	{
@@ -410,10 +403,11 @@ void MainView::load_local(const std::string ip)
 	ConfigFile cf(CFG_FILE);
 	std::string picPath = cf.getValue("path", ip);
 	class_list[ip].ip = ip;
-	if(picPath.empty ())
+	if (!Logan::file_exist(picPath))
 	{
 		try
 		{
+			CreateDirectoryA(ip.c_str(), NULL);
 			update_pic(ip);
 		}
 		catch (std::exception& e)
@@ -427,21 +421,13 @@ void MainView::load_local(const std::string ip)
 	}
 
 	/* load name*/
-	std::string name = cf.getValue("name", ip);
-	if(name.empty ())
+	try
 	{
-		try
-		{
-			update_name(ip);
-		}
-		catch (std::exception& e)
-		{
-			throw e;
-		}
+		update_name(ip);
 	}
-	else
+	catch (std::exception& e)
 	{
-		class_list[ip].name = name;
+		throw e;
 	}
 }
 
@@ -452,7 +438,6 @@ void MainView::update_pic(const std::string ip)
 	{
 		std::string picName = Logan::query_msg_node(requestPicNameUrl, ip);
 		std::string downloadUrl = "http://" + ip + "/" + picName;
-		CreateDirectoryA(ip.c_str(), NULL);
 		if (!picName.empty())// if no picture on server
 		{
 			std::string path = ip + "/" + picName;
@@ -461,6 +446,7 @@ void MainView::update_pic(const std::string ip)
 				throw std::exception("download error");
 			}
 			ConfigFile cf(CFG_FILE);
+			class_list[ip].path = path;
 			cf.addValue("path", path, ip);
 			cf.save();
 		}
@@ -551,13 +537,21 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		p->get_url(user_list::ip);
 		p->load_local(user_list::server_ip);
 		p->get_url(user_list::server_ip);
-		p->m_pServerPic->SetBkImage(p->class_list[user_list::server_ip].path.c_str());
+
+		/* set name of server*/
+		p->m_pServerName->SetText(p->class_list[user_list::server_ip].name.c_str());
+
+		/* set picture of server*/
+		if (Logan::file_exist(p->class_list[user_list::server_ip].path))
+			p->m_pServerPic->SetBkImage(p->class_list[user_list::server_ip].path.c_str());
+
+		/*play video of login server*/
 		if (!p->class_list[user_list::ip].url.empty())
 		{
-			p->m_pVideo->stop();
 			p->m_pVideo->play(p->class_list[user_list::ip].url);
 		}
 		/* then get info from network*/
+		bool bHad = false;
 		for (std::set<std::string>::iterator itor = p->ip_list.begin(); itor != p->ip_list.end();itor++)
 		{
 			CreateDirectoryA(itor->c_str(), NULL);
@@ -567,7 +561,7 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 				p->class_list[*itor].ip = *itor;
 				classItemUI *item = new classItemUI;
 				item->setIp(itor->c_str());
-				if (!p->class_list[*itor].path.empty())
+				if (!p->class_list[*itor].path.empty() && Logan::file_exist(p->class_list[*itor].path))
 					item->setImage(p->class_list[*itor].path.c_str());
 				item->setTitle(p->class_list[*itor].name.c_str());
 				ManagerItem::Add(p->m_pCalssLay, item);
@@ -576,7 +570,7 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 			{
 				classItemUI *item = new classItemUI;
 				item->setIp(itor->c_str());
-				if (!p->class_list[*itor].path.empty())
+				if (!p->class_list[*itor].path.empty() && Logan::file_exist(p->class_list[*itor].path))
 					item->setImage(p->class_list[*itor].path.c_str());
 				item->setTitle(p->class_list[*itor].name.c_str());
 				ManagerItem::Add(p->m_pCalssLay, item);
@@ -584,10 +578,17 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 				p->update_connect_state(true);
 				if (!p->class_list[*itor].url.empty())
 				{
-					p->m_pVideo->stop();
+					bHad = true;
+					//if (p->m_pVideo->is_playing())
+						//p->m_pVideo->stop();
 					p->m_pVideo->play(p->class_list[user_list::server_ip].url);
 				}
 			}
+		}
+
+		if (!bHad && !p->class_list[user_list::ip].url.empty())
+		{
+			p->m_pVideo->play(p->class_list[user_list::ip].url);
 		}
 	}
 	catch (std::exception& e)
@@ -595,6 +596,10 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		p->error_msg = e.what();
 		::PostMessageA(*p, WM_ERROR_TIP, NULL, NULL);
 	}
+
+	/* update chat state*/
+	if (!p->chat_ip.empty())
+		p->selected_speak(p->chat_ip);
 	return 0;
 }
 
@@ -608,7 +613,7 @@ DWORD WINAPI updateProc(_In_ LPVOID paramer)
 		{
 			p->update_pic(p->just_join_update_pic);
 			classItemUI *item = ManagerItem::getItem(p->just_join_update_pic.c_str());
-			if (!p->class_list[p->just_join_update_pic].path.empty())
+			if (!p->class_list[p->just_join_update_pic].path.empty() && Logan::file_exist(p->class_list[p->just_join_update_pic].path))
 				item->setImage(p->class_list[p->just_join_update_pic].path.c_str());
 			p->msg_coming(p->class_list[p->just_join_update_pic].name + "更新了头像");
 			p->current_update_state = UPDATE_NONE;
@@ -627,10 +632,23 @@ DWORD WINAPI updateProc(_In_ LPVOID paramer)
 			classItemUI *item = new classItemUI;
 			item->setIp(p->just_join_member.c_str());
 			item->setTitle(p->class_list[p->just_join_member].name.c_str());
-			if (!p->class_list[p->just_join_member].path.empty())
+			if (!p->class_list[p->just_join_member].path.empty() && Logan::file_exist(p->class_list[p->just_join_member].path))
 				item->setImage(p->class_list[p->just_join_member].path.c_str());
 			ManagerItem::Add(p->m_pCalssLay, item);
 			p->msg_coming(p->class_list[p->just_join_member].name + "上线了");
+			if (p->just_join_member == user_list::ip)
+			{
+				p->get_url(p->just_join_member);
+				p->m_pConnect->SetText(_T("断开连接"));
+				if (!p->class_list[user_list::ip].url.empty())
+				{
+					if (p->m_pVideo->is_playing())
+					{
+						p->m_pVideo->stop();
+					}
+					p->m_pVideo->play(p->class_list[user_list::server_ip].url);
+				}
+			}
 			p->current_update_state = UPDATE_NONE;
 		}			
 	}
@@ -674,12 +692,13 @@ LPCTSTR classItemUI::getTitle()const
 
 void classItemUI::setIp(LPCTSTR pstr_ip)
 {
-	m_pIP->SetText(pstr_ip);
+	pstrIP = pstr_ip;
+	m_pIP->SetText(pstrIP);
 }
 
 LPCTSTR classItemUI::getIP()const
 {
-	return m_pIP->GetText();
+	return pstrIP /* m_pIP->GetText()*/;
 }
 
 void classItemUI::setImage(LPCTSTR pstr_image)

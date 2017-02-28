@@ -1,4 +1,5 @@
 #include <time.h>
+#include <io.h>
 #include "LoginWnd.h"
 #include "HttpRequest.h"
 #include "ConfigFile.h"
@@ -201,7 +202,7 @@ void LoginWnd::LoadLocalData()
 
 	m_pEditIP->SetText(cfg.getValue("login_ip", "accout").c_str());
 	string ico_path = cfg.getValue("path", cfg.getValue("login_ip", "accout").c_str());
-	if (!ico_path.empty())
+	if (!ico_path.empty() && Logan::file_exist(ico_path))
 	{
 		m_pLabImage->SetBkImage(ico_path.c_str());
 	}
@@ -450,7 +451,7 @@ std::string Logan::query_url(std::string requestUrl, std::string ip)
 
 std::string Logan::query_msg_node(std::string requestUrl, std::string ip)
 {
-	std::string str_ret;
+	static std::string str_ret;
 	try
 	{
 		strToken::tokenTable_type token_table = strToken::getInstance();
@@ -484,4 +485,9 @@ bool Logan::download(std::string upLoadUrl, std::string local_path)
 {
 	ICjrCurl *cjrcurl = ICjrCurl::GetInstance();
 	return cjrcurl->Download(upLoadUrl, local_path, "---download---");
+}
+
+bool Logan::file_exist(const std::string path)
+{
+	return (_access(path.c_str(), NULL) != -1);
 }
