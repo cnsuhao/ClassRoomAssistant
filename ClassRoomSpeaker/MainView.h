@@ -69,6 +69,7 @@ protected:
 	CLabelUI*		m_pTitle;
 	CLabelUI*		m_pIP;
 	CButtonUI*		m_pcnt;		//Á¬½Ó°´Å¥
+	CDuiString		m_strIP;
 protected:
 	void initItem();
 

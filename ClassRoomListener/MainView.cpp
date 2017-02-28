@@ -770,6 +770,7 @@ void ManagerItem::Add (CContainerUI* pContain, classItemUI* item)
 	ManagerItem::UI u;
 	u.item = item;
 	u.sep = new sepUI(5);
+	CDuiString strIp(item->getIP());
 	mgr[item->getIP()] = u;
 	pContain->Add(u.sep);
 	pContain->Add(u.item);

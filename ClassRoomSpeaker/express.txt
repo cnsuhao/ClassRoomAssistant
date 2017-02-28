@@ -4,8 +4,8 @@ name=你好123
 [192.168.8.237]
 name=德玛西亚
 [192.168.8.82]
-name=的vahsvdh
-path=192.168.8.82/ico.png
+name=我是仓库
+path=192.168.8.82/default_img.png
 [192.168.8.83]
 name=hello
 path=192.168.8.83/ico.png
