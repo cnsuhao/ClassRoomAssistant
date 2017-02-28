@@ -24,6 +24,8 @@ enum enScale
 enum enPlayerMsg
 {
 	PlayerMsg_Volume = 0,
+	PlayerMsg_File,
+	PlayerMsg_Pos,
 	PlayerMsg_End,
 	PlayerMsg_Error,
 };
@@ -47,6 +49,7 @@ public:
 	virtual bool Load(string strPath) = 0;
 	virtual void Stop() = 0;
 
+	virtual void SetSplit(int nSplit) = 0;
 	virtual void SetScale(enScale eScale) = 0;
 	virtual void SetVolume(int nVolume) = 0;
 	virtual void SetMute(bool bMute) = 0;
