@@ -72,6 +72,7 @@ protected:
 	CDuiString		m_strIP;
 protected:
 	void initItem();
+	CDuiString pstrIP;
 
 };
 
@@ -188,6 +189,8 @@ private:
 	void DisplayDateTime();
 
 	void SoundStateOn(int index,bool is_on);
+
+	void update_video_state();
 
 	void init_videoList();
 

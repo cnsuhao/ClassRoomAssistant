@@ -55,9 +55,6 @@ MainView::~MainView()
 	{
 		CloseHandle(update_thread);
 	}
-	/* make all-user logout*/
-	release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
-	WaitForSingleObject(release_thread, 5000);
 }
 
 LPCSTR  MainView::GetWindowClassName() const
@@ -152,8 +149,8 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			msg_coming(class_list[res["ip"]].name + "退出了");
 			if (!class_list[user_list::ip].url.empty())
 			{
-				//m_pVideo->stop();
-				//m_pVideo->play(class_list[user_list::ip].url);
+				m_pVideo->stop();
+				m_pVideo->play(class_list[user_list::ip].url);
 			}
 			class_list.erase(class_list.find(res["ip"]));
 			if (class_list.find(user_list::ip) == class_list.end())
@@ -194,301 +191,6 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 	}
 }
 
-DWORD WINAPI updateJoin_Proc(_In_ LPVOID paramer)
-{
-	MainView *p = (MainView*)paramer;
-	//p->class_list[p->just_join];
-	//CreateDirectoryA(p->just_join.c_str(), NULL);
-	//std::string logincode, namecode, icocode, mmsg, token, pmsg;
-	//// 登陆获得token
-	//std::string requestUrl = "http://" + p->just_join + "/" + login_cgi + "type=login&userName=" + admin_user + "&password=" + admin_passwd;
-	//std::string res = HttpRequest::request(requestUrl);
-	//TiXmlDocument xml;
-	//xml.Parse(res.c_str());
-	//TiXmlNode *root = xml.RootElement();
-	//for (TiXmlNode *i = root->FirstChildElement(); i; i = i->NextSiblingElement())
-	//{
-	//	if (strcmp(i->Value(), "code") == 0)
-	//	{
-	//		logincode = string(i->FirstChild()->Value());
-	//	}
-	//	else if (strcmp(i->Value(), "msg") == 0)
-	//	{
-	//		token = string(i->FirstChild()->Value());
-	//	}
-	//}
-	//if (logincode == "1")
-	//{
-	//	//获取名称
-	//	requestUrl = "http://" + p->just_join + "/" + login_cgi + "type=getdevname&token=" + token;
-	//	res = HttpRequest::request(requestUrl);
-	//	TiXmlDocument xmll;
-	//	xmll.Parse(res.c_str());
-	//	TiXmlNode *root = xmll.RootElement();
-	//	for (TiXmlNode *i = root->FirstChildElement(); i; i = i->NextSiblingElement())
-	//	{
-	//		if (strcmp(i->Value(), "code") == 0)
-	//		{
-	//			namecode = string(i->FirstChild()->Value());
-	//		}
-	//		else if (strcmp(i->Value(), "msg") == 0 && namecode == "1")
-	//		{
-	//			mmsg = string(i->FirstChild()->Value());
-	//			p->class_list[p->just_join].dev_name = CMyCharConver::UTF8ToANSI(mmsg);
-	//		}
-	//	}
-	//	//获取播放地址
-	//	{
-	//		string rcode, rmsg, rtmp_url;
-	//		string rurl = "http://" + p->just_join + "/" + login_cgi + "type=queryurl&name=sublurl&token=" + token;
-	//		string rres = HttpRequest::request(rurl);
-	//		TiXmlDocument xmlrr;
-	//		xmlrr.Parse(rres.c_str());
-	//		TiXmlNode *rootr = xmlrr.RootElement();
-	//		for (TiXmlNode *ir = rootr->FirstChildElement(); ir; ir = ir->NextSiblingElement())
-	//		{
-	//			if (strcmp(ir->Value(), "code") == 0)
-	//			{
-	//				rcode = string(ir->FirstChild()->Value());
-	//			}
-	//			else if (strcmp(ir->Value(), "msg") == 0)
-	//			{
-	//				if (ir->FirstChild())
-	//					rmsg = string(ir->FirstChild()->Value());
-	//			}
-	//			else if (rmsg == "successed" && strcmp(ir->Value(), "data") == 0)
-	//			{
-	//				ir = ir->FirstChildElement()->FirstChildElement();
-	//				rtmp_url = string(ir->FirstChild()->Value());
-	//			}
-	//		}
-	//		if (!rtmp_url.empty())
-	//		{
-	//			p->class_list[p->just_join].play_url = rtmp_url.replace(7, 9, p->just_join);
-	//			//p->class_list[p->just_join].class_video.video->MediaPlayer->Load(p->class_list[p->just_join].play_url);
-	//		}
-	//	}
-
-	//	//获取头像
-	//	requestUrl = "http://" + p->just_join + "/" + login_cgi + "type=getpicture&token=" + token;
-	//	string pres = HttpRequest::request(requestUrl);
-	//	TiXmlDocument xmlp;
-	//	xmlp.Parse(pres.c_str());
-	//	TiXmlNode *rootp = xmlp.RootElement();
-	//	for (TiXmlNode *i = rootp->FirstChildElement(); i; i = i->NextSiblingElement())
-	//	{
-	//		if (strcmp(i->Value(), "code") == 0)
-	//		{
-	//			icocode = string(i->FirstChild()->Value());
-	//		}
-	//		else if (strcmp(i->Value(), "msg") == 0 && icocode == "1")
-	//		{
-	//			pmsg = string(i->FirstChild()->Value());
-	//			p->class_list[p->just_join].picture_path = CMyCharConver::UTF8ToANSI(pmsg);
-	//		}
-	//	}
-	//	//download picture
-	//	if (!p->class_list[p->just_join].picture_path.empty())
-	//	{
-	//		ICjrCurl *cjrcurl = ICjrCurl::GetInstance();
-	//		cjrcurl->Download("http://" + p->just_join + "/" + p->class_list[p->just_join].picture_path, p->just_join + "/" + p->class_list[p->just_join].picture_path, "");
-
-	//	}
-	//}
-	////控件关联
-	//p->class_list[p->just_join].class_ctrl.btn_connect = p->classRoom[p->class_list.size() - 1].btn_connect;
-	//p->class_list[p->just_join].class_ctrl.btn_ico = p->classRoom[p->class_list.size() - 1].btn_ico;
-	//p->class_list[p->just_join].class_ctrl.lab_ip = p->classRoom[p->class_list.size() - 1].lab_ip;
-	//p->class_list[p->just_join].class_ctrl.lab_title = p->classRoom[p->class_list.size() - 1].lab_title;
-	//p->class_list[p->just_join].class_ctrl.lay = p->classRoom[p->class_list.size() - 1].lay;
-
-	//p->class_list[p->just_join].class_video.btn_sound_off = p->subVideo[p->class_list.size() - 1].btn_sound_off;
-	//p->class_list[p->just_join].class_video.btn_sound = p->subVideo[p->class_list.size() - 1].btn_sound;
-	//p->class_list[p->just_join].class_video.btn_student = p->subVideo[p->class_list.size() - 1].btn_student;
-	//p->class_list[p->just_join].class_video.btn_teacher = p->subVideo[p->class_list.size() - 1].btn_teacher;
-	//p->class_list[p->just_join].class_video.lab_title = p->subVideo[p->class_list.size() - 1].lab_title;
-	//p->class_list[p->just_join].class_video.video = p->subVideo[p->class_list.size() - 1].video;
-	//p->PostMessageA(WM_CLIENT_ADDED, 0, 0);
-
-	return 0;
-}
-DWORD WINAPI updatePicture_Proc(_In_ LPVOID paramer)
-{
-	MainView *p = (MainView*)paramer;
-
-	//string icocode, pmsg;
-	//string requestUrl = "http://" + p->just_update_pic + "/" + login_cgi + "type=getpicture&token=" + LoginWnd::getToken(p->just_update_pic);
-	//string pres = HttpRequest::request(requestUrl);
-	//TiXmlDocument xmlp;
-	//xmlp.Parse(pres.c_str());
-	//TiXmlNode *rootp = xmlp.RootElement();
-	//for (TiXmlNode *i = rootp->FirstChildElement(); i; i = i->NextSiblingElement())
-	//{
-	//	if (strcmp(i->Value(), "code") == 0)
-	//	{
-	//		icocode = string(i->FirstChild()->Value());
-	//	}
-	//	else if (strcmp(i->Value(), "msg") == 0 && icocode == "1")
-	//	{
-	//		pmsg = string(i->FirstChild()->Value());
-	//		p->class_list[p->just_update_pic].picture_path = CMyCharConver::UTF8ToANSI(pmsg);
-	//	}
-	//}
-	////download picture
-	//if (!p->class_list[p->just_update_pic].picture_path.empty())
-	//{
-	//	ICjrCurl *cjrcurl = ICjrCurl::GetInstance();
-	//	cjrcurl->Download("http://" + p->just_update_pic + "/" + p->class_list[p->just_update_pic].picture_path, p->just_update_pic + "/" + p->class_list[p->just_update_pic].picture_path, "");
-	//	p->class_list[p->just_update_pic].class_ctrl.btn_ico->SetBkImage((p->just_update_pic +"/"+ p->class_list[p->just_update_pic].picture_path).c_str());
-	//	p->class_list[p->just_update_pic].class_ctrl.btn_ico->Invalidate();
-
-	//}
-	return 0;
-}
-DWORD WINAPI LiveViewSwitch(_In_ LPVOID paramer)
-{
-	MainView *p = (MainView*)paramer;
-	//std::string logincode, namecode, icocode, mmsg, token, pmsg;
-	//// 登陆获得token
-	//std::string requestUrl = "http://" + p->just_join + "/" + login_cgi + "type=login&userName=" + admin_user + "&password=" + admin_passwd;
-	//std::string res = HttpRequest::request(requestUrl);
-	//TiXmlDocument xml;
-	//xml.Parse(res.c_str());
-	//TiXmlNode *root = xml.RootElement();
-	//for (TiXmlNode *i = root->FirstChildElement(); i; i = i->NextSiblingElement())
-	//{
-	//	if (strcmp(i->Value(), "code") == 0)
-	//	{
-	//		logincode = string(i->FirstChild()->Value());
-	//	}
-	//	else if (strcmp(i->Value(), "msg") == 0)
-	//	{
-	//		token = string(i->FirstChild()->Value());
-	//	}
-	//}
-	//if (logincode == "1")
-	//{
-	//	//获取名称
-	//	requestUrl = "http://" + p->just_join + "/" + login_cgi + "type=getdevname&token=" + token;
-	//	res = HttpRequest::request(requestUrl);
-	//	TiXmlDocument xmll;
-	//	xmll.Parse(res.c_str());
-	//	TiXmlNode *root = xmll.RootElement();
-	//	for (TiXmlNode *i = root->FirstChildElement(); i; i = i->NextSiblingElement())
-	//	{
-	//		if (strcmp(i->Value(), "code") == 0)
-	//		{
-	//			namecode = string(i->FirstChild()->Value());
-	//		}
-	//		else if (strcmp(i->Value(), "msg") == 0 && namecode == "1")
-	//		{
-	//			mmsg = string(i->FirstChild()->Value());
-	//			p->class_list[p->just_join].dev_name = CMyCharConver::UTF8ToANSI(mmsg);
-	//		}
-	//	}
-	//}
-	return 0;
-}
-
-DWORD WINAPI initList(_In_ LPVOID paramer)
-{
-
-	return 0;
-}
-
-
-DWORD WINAPI initLocalUrl(_In_ LPVOID paramer)
-{
-	MainView* p = (MainView*)paramer;
-	
-	////获取本地播放地址
-	//string rcode, rmsg, rtmp_url;
-	//string rurl = "http://" + login_ip + "/" + login_cgi + "type=queryurl&name=sublurl&token=" + login_token;
-	//string rres = HttpRequest::request(rurl);
-	//TiXmlDocument xmlrr;
-	//xmlrr.Parse(rres.c_str());
-	//TiXmlNode *rootr = xmlrr.RootElement();
-	//for (TiXmlNode *ir = rootr->FirstChildElement(); ir; ir = ir->NextSiblingElement())
-	//{
-	//	if (strcmp(ir->Value(), "code") == 0)
-	//	{
-	//		rcode = string(ir->FirstChild()->Value());
-	//	}
-	//	else if (strcmp(ir->Value(), "msg") == 0)
-	//	{
-	//		if (ir->FirstChild())
-	//			rmsg = string(ir->FirstChild()->Value());
-	//	}
-	//	else if (rmsg == "successed" && strcmp(ir->Value(), "data") == 0)
-	//	{
-	//		ir = ir->FirstChildElement()->FirstChildElement();
-	//		rtmp_url = string(ir->FirstChild()->Value());
-	//	}
-	//}
-	//if (!rtmp_url.empty())
-	//	p->local_url = rtmp_url.replace(7, 9, login_ip);
-	////获取本地导播流
-	//string dcode, dmsg, durl;
-	//string d_request_url = "http://" + login_ip + "/" + login_cgi + "type=queryurl&name=durl&token=" + login_token;
-	//string d_res = HttpRequest::request(d_request_url);
-	//TiXmlDocument d_xml;
-	//d_xml.Parse(d_res.c_str());
-	//TiXmlNode *vga_root = d_xml.RootElement();
-	//for (TiXmlNode *ir = vga_root->FirstChildElement(); ir; ir = ir->NextSiblingElement())
-	//{
-	//	if (strcmp(ir->Value(), "code") == 0)
-	//	{
-	//		dcode = string(ir->FirstChild()->Value());
-	//	}
-	//	else if (strcmp(ir->Value(), "msg") == 0)
-	//	{
-	//		if (ir->FirstChild())
-	//			dmsg = string(ir->FirstChild()->Value());
-	//	}
-	//	else if (dmsg == "successed" && strcmp(ir->Value(), "data") == 0)
-	//	{
-	//		ir = ir->FirstChildElement()->FirstChildElement();
-	//		durl = string(ir->FirstChild()->Value());
-	//	}
-	//}
-	//if (!durl.empty())
-	//	p->local_durl = durl.replace(7, 9, login_ip);
-	////获取VGA流
-	//string vgacode, vgamsg, vga_url;
-	//string vga_request_url = "http://" + login_ip + "/" + login_cgi + "type=queryurl&name=vgaurl&token=" + login_token;
-	//string vga_res = HttpRequest::request(vga_request_url);
-	//TiXmlDocument vag_xml;
-	//vag_xml.Parse(vga_res.c_str());
-	//TiXmlNode *d_root = vag_xml.RootElement();
-	//for (TiXmlNode *ir = d_root->FirstChildElement(); ir; ir = ir->NextSiblingElement())
-	//{
-	//	if (strcmp(ir->Value(), "code") == 0)
-	//	{
-	//		vgacode = string(ir->FirstChild()->Value());
-	//	}
-	//	else if (strcmp(ir->Value(), "msg") == 0)
-	//	{
-	//		if (ir->FirstChild())
-	//			vgamsg = string(ir->FirstChild()->Value());
-	//	}
-	//	else if (vgamsg == "successed" && strcmp(ir->Value(), "data") == 0)
-	//	{
-	//		ir = ir->FirstChildElement()->FirstChildElement();
-	//		vga_url = string(ir->FirstChild()->Value());
-	//	}
-	//}
-	//if (!vga_url.empty())
-	//	p->vga_url = vga_url.replace(7, 9, login_ip);
-	//Sleep(300);
-	//CVideoUI *video = static_cast<CVideoUI*>(p->m_PaintManager.FindControl(_T("mainVideo")));
-	//	video->MediaPlayer->Load(p->local_url);
-	//	p->subVideo[4].video->MediaPlayer->Load(p->local_durl);
-	//	p->subVideo[4].lab_title->SetText(_T("本地"));
-	//	p->subVideo[5].video->MediaPlayer->Load(p->vga_url);
-	//	p->subVideo[5].lab_title->SetText(_T("PPT"));
-return 0;
-}
-
 
 void MainView::Notify(TNotifyUI& msg)
 {
@@ -516,6 +218,9 @@ void MainView::Notify(TNotifyUI& msg)
 		{
 			if (IDOK == TipMsg::ShowMsgWindow(*this, _T("确实要退出？"), _T("提示")))
 			{
+				/* make all-user logout*/
+				release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
+				WaitForSingleObject(release_thread, 5000);
 				Close();
 			}
 		}
@@ -643,7 +348,7 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			classItemUI *item = new classItemUI;
 			item->setIp(just_join_member.c_str());
 			item->setTitle(class_list[just_join_member].name.c_str());
-			if (!class_list[just_join_member].path.empty())
+			if (!class_list[just_join_member].path.empty() && Logan::file_exist(class_list[just_join_member].path))
 				item->setImage(class_list[just_join_member].path.c_str());
 			ManagerItem::Add(m_pCalssLay, item);
 			msg_coming(class_list[just_join_member].name + "上线了");
@@ -651,9 +356,10 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			char data[50];
 			strcpy(data, sstr.c_str());
 			client->sendData(data,strlen(data));
+
 			// play video
 			class_list[just_join_member].media = video_list[class_list.size() - 2];
-			class_list[just_join_member].media.video->stop();
+			Sleep(300);
 			//class_list[just_join_member].media.video->play(class_list[just_join_member].url);
 			video_list[1].video->play(class_list[just_join_member].url);
 		}
@@ -744,8 +450,6 @@ void MainView::update_name(const std::string ip)
 		std::string name = Logan::query_msg_node(requestUrl, ip);
 		class_list[ip].name = name;
 		ConfigFile cf(CFG_FILE);
-		cf.addValue("name", name, ip);
-		cf.save();
 	}
 	catch (std::exception& e)
 	{
@@ -758,10 +462,12 @@ void MainView::load_local(const std::string ip)
 	/* load pic*/
 	ConfigFile cf(CFG_FILE);
 	std::string picPath = cf.getValue("path", ip);
-	if (picPath.empty())
+	class_list[ip].ip = ip;
+	if (!Logan::file_exist(picPath))
 	{
 		try
 		{
+			CreateDirectoryA(ip.c_str(), NULL);
 			update_pic(ip);
 		}
 		catch (std::exception& e)
@@ -775,21 +481,13 @@ void MainView::load_local(const std::string ip)
 	}
 
 	/* load name*/
-	std::string name = cf.getValue("name", ip);
-	if (name.empty())
+	try
 	{
-		try
-		{
-			update_name(ip);
-		}
-		catch (std::exception& e)
-		{
-			throw e;
-		}
+		update_name(ip);
 	}
-	else
+	catch (std::exception& e)
 	{
-		class_list[ip].name = name;
+		throw e;
 	}
 }
 
@@ -800,7 +498,6 @@ void MainView::update_pic(const std::string ip)
 	{
 		std::string picName = Logan::query_msg_node(requestPicNameUrl, ip);
 		std::string downloadUrl = "http://" + ip + "/" + picName;
-		CreateDirectoryA(ip.c_str(), NULL);
 		if (!picName.empty())// if no picture on server
 		{
 			std::string path = ip + "/" + picName;
@@ -809,6 +506,7 @@ void MainView::update_pic(const std::string ip)
 				throw std::exception("download error");
 			}
 			ConfigFile cf(CFG_FILE);
+			class_list[ip].path = path;
 			cf.addValue("path", path, ip);
 			cf.save();
 		}
@@ -930,6 +628,17 @@ void MainView::SoundStateOn(int index, bool is_on)
 	}
 }
 
+void MainView::update_video_state()
+{
+	/*for (std::map<std::string, ItemData>::iterator itor = class_list.begin(); itor != class_list.end();itor++)
+	{
+		if (itor->first != user_list::ip)
+		{
+			
+		}
+	}*/
+}
+
 void MainView::init_videoList()
 {
 	for (int i = 0; i < 6; i++)
@@ -988,7 +697,6 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		/* play main video*/
 		if (!p->class_list[user_list::ip].url.empty())
 		{
-			//p->m_pVideo->stop();
 			p->m_pVideo->play(p->class_list[user_list::ip].url);
 		}
 		/* play director stream*/
@@ -996,7 +704,6 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		p->video_list[4].title->SetText(_T("本地导播"));
 		if (!p->durl.empty())
 		{
-			//p->video_list[4].video->stop();
 			p->video_list[4].video->play(p->durl);
 		}
 		/* play vga(PPT) stream*/
@@ -1004,7 +711,6 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		p->video_list[5].title->SetText(_T("PPT"));
 		if (!p->vga_url.empty())
 		{
-			//p->video_list[5].video->stop();
 			p->video_list[5].video->play(p->vga_url);
 		}
 		/* then get info from network*/
@@ -1015,7 +721,7 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 			classItemUI *item = new classItemUI;
 			item->setIp(itor->c_str());
 			p->class_list[*itor].ip = *itor;
-			if (!p->class_list[*itor].path.empty())
+			if (!p->class_list[*itor].path.empty() && Logan::file_exist(p->class_list[*itor].path))
 				item->setImage(p->class_list[*itor].path.c_str());
 			item->setTitle(p->class_list[*itor].name.c_str());
 			ManagerItem::Add(p->m_pCalssLay, item);
@@ -1026,7 +732,6 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 			++index;
 			if (!p->class_list[*itor].url.empty())
 			{
-				//p->class_list[*itor].media.video->stop();
 				Sleep(300);
 				p->class_list[*itor].media.video->play(p->class_list[*itor].url);
 			}
@@ -1050,7 +755,7 @@ DWORD WINAPI updateProc(_In_ LPVOID paramer)
 		{
 			p->update_pic(p->just_join_update_pic);
 			classItemUI *item = ManagerItem::getItem(p->just_join_update_pic.c_str());
-			if (!p->class_list[p->just_join_update_pic].path.empty())
+			if (!p->class_list[p->just_join_update_pic].path.empty() && Logan::file_exist(p->class_list[p->just_join_update_pic].path))
 				item->setImage(p->class_list[p->just_join_update_pic].path.c_str());
 			p->msg_coming(p->class_list[p->just_join_update_pic].name + "更新了头像");
 			p->current_update_state = UPDATE_NONE;
@@ -1112,13 +817,14 @@ LPCTSTR classItemUI::getTitle()const
 
 void classItemUI::setIp(LPCTSTR pstr_ip)
 {
-	m_pIP->SetText(pstr_ip);
+	pstrIP = pstr_ip;
+	m_pIP->SetText(pstrIP);
 	m_strIP = pstr_ip;
 }
 
 LPCTSTR classItemUI::getIP()const
 {
-	return m_strIP/*m_pIP->GetText()*/;
+	return pstrIP;
 }
 
 void classItemUI::setImage(LPCTSTR pstr_image)

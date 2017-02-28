@@ -15,6 +15,7 @@ public:
 	static std::string query_msg_node(std::string requestUrl, std::string ip);
 	static bool upload(std::string upLoadUrl, std::string ip, std::string local_path);
 	static bool download(std::string upLoadUrl, std::string local_path);
+	static bool file_exist(const std::string path);
 private:
 };
 

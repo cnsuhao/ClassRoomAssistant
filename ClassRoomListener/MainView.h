@@ -76,6 +76,7 @@ protected:
 	CLabelUI*		m_pState;		
 protected:
 	void initItem();
+	CDuiString pstrIP;
 
 };
 
@@ -133,6 +134,8 @@ protected:
 	CVideoUI *m_pVideo;
 private:
 	ITCPClient *client; 
+
+	std::string chat_ip;
 
 	/* save class-data in hash-table */
 	std::map<std::string, ItemData>class_list;
