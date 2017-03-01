@@ -16,7 +16,6 @@ public:
 	value_type operator()(key_type id);
 	value_type getValue(key_type id);
 	value_type operator[](key_type id);
-private:
 	static std::map<key_type, value_type>token_table;
 };
 
@@ -76,6 +75,8 @@ public:
 	static void init(const std::string configure_file);
 	static std::string user_name;
 	static std::string passwd;
+	static std::string login_user;
+	static std::string login_passwd;
 	static std::string cgi;
 	static std::string ip;
 	static std::string server_ip;

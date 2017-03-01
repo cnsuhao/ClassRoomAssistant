@@ -1,8 +1,0 @@
-[accout]
-cgi=demo.cgi?
-login_ip=
-passwd=dmtlb
-user=admin
-[server]
-port=4507
-server_ip=192.168.8.83

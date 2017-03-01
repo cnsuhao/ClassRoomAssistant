@@ -33,12 +33,16 @@ void CVideoWnd::Init(CVideoUI* pOwner)
 	rcpos.bottom+=rcwnd.top;
 	Create(m_pOwner->GetManager()->GetPaintWindow(),NULL,WS_CHILD|WS_EX_TOPMOST  | WS_VISIBLE,0,rcpos);
 	::ShowWindow(m_hWnd,SW_SHOW);
+
+	/* set timer*/
+	SetTimer(*this, 3692, 1000, NULL);
 }
 LRESULT CVideoWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_ERASEBKGND)
 	{
 		PainBk();
+		return 0;
 	}
 	else if (uMsg == WM_LBUTTONDOWN)
 	{
@@ -54,14 +58,16 @@ LRESULT CVideoWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			m_pOwner->GetManager()->SendNotify(m_pOwner, DUI_MSGTYPE_DBCLICK);
 			click_tick = 0;
 		}
+		return 0;
 	}
-	/*else if (uMsg==WM_SIZE)
+	else if (uMsg==WM_TIMER)
 	{
+		if (wParam == 3692)
+		{
+			PainBk();
+		}
+		return 0;
 	}
-	else if (uMsg==WM_RBUTTONDOWN)
-	{
-		
-	}*/
 	return CWindowWnd::HandleMessage(uMsg,wParam,lParam);
 }
 
@@ -144,9 +150,12 @@ void CVideoUI::fullSrc()
 
 void CVideoUI::HandlePlayerMsg(int nMsg, WPARAM wParam /* = 0 */, LPARAM lParam /* = 0 */)
 {
+	char str[50];
 	switch (nMsg)
 	{
 	case PlayerMsg_Volume :
+		m_volume = wParam;
+		m_pManager->SendNotify(this, _T("volume_change"));
 		break;
 	case PlayerMsg_File:
 		OutputDebugStringA("Player::[PlayerMsg_File]\n");
@@ -184,6 +193,8 @@ bool CVideoUI::play(std::string url)
 void CVideoUI::stop()
 {
 	media_play->Stop();
+	Sleep(500);
+	m_pwindows->PainBk();
 }
 void CVideoUI::setVolume(int volume)
 {

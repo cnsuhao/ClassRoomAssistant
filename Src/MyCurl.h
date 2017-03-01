@@ -7,7 +7,6 @@
 #include "../Src/curl/include/types.h"
 #pragma comment(lib,"../lib/libcurl.lib")
 
-
 #include "Windows.h"
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment(lib,"winmm.lib")

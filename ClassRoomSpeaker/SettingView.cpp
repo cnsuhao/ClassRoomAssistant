@@ -124,9 +124,9 @@ void SettingView::Init()
 		char ctrl_name[200];
 		sprintf(ctrl_name, "edit_remote%d", i + 1);
 		remote_edit[i] = static_cast<CEditUI*>(m_PaintManager.FindControl(ctrl_name));
-		remote_edit[i]->SetEnabled(false);
 		if (!remoteIP[i].empty())
 			remote_edit[i]->SetText(remoteIP[i].c_str());
+		remote_edit[i]->SetEnabled(false);
 	}
 
 	remote_edit[4] = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("edit_lubo_IP")));

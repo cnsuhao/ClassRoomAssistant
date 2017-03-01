@@ -6,7 +6,7 @@
             <Label name="lab_title" text="提示" bordersize="0" float="false" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
         </HorizontalLayout>
 		<VerticalLayout>
-			<Label name="time_out" visible="false" width="20" width="250" float="false" align="center" textcolor="#FFFFFFFF" />
+			<Label name="time_out" visible="false" width="20" width="250" float="false" align="center" textcolor="#FFFF0000" />
 			<Label name="lab_tip" text="提示信息" bordersize="0" float="false" width="250" textcolor="#FFFFFFFF" height="60" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
 		</VerticalLayout>
         <HorizontalLayout bordersize="0" float="false" height="30">

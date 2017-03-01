@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="1060,600" caption="0,0,0,50">
+<Window size="1060,600" caption="0,0,0,50" roundcorner="5,5">
     <Font name="微软雅黑" size="21" bold="false" italic="false" />
     <Font name="微软雅黑" size="19" bold="false" italic="false" />
     <Font name="微软雅黑" size="16" bold="false" italic="false" />
@@ -21,10 +21,12 @@
         <HorizontalLayout name="CenterLay" bordersize="0" float="false">
             <VerticalLayout name="MainVer" bordersize="0" float="false">
                 <HorizontalLayout name="MainVideoLay" bordersize="0" float="false" bkcolor="#FF212121">
+					<HorizontalLayout width="1" bkcolor="FF656565" />
                     <VerticalLayout name="MediaLay" bordersize="0" float="false" >
 						<HorizontalLayout>
 						<Video name="mainVideo" />
 						</HorizontalLayout>
+						<Progress name="progress_voice" height="5"  min="0" max="120"  hor="true" align="center" />
 					</VerticalLayout>
                     <VerticalLayout name="FunctionLay" bordersize="0" float="false" width="23">
                         <Container bordersize="0" float="false" />
@@ -33,6 +35,7 @@
                         <Container bordersize="0" float="false" />
                     </VerticalLayout>
                 </HorizontalLayout>
+				<HorizontalLayout height="2" bkcolor="FF656565" />
             </VerticalLayout>
             <VerticalLayout name="ClassRoomLay" bordersize="0" float="false" width="190" bkcolor="#FF434343">
                 <VerticalLayout name="CalssRoomTitleLay" bordersize="0" float="false" height="31">

@@ -22,7 +22,6 @@ using namespace std;
 
 
 
-#define  CLOUD_IP_FILE	"express.conf"
 #define  DB_FILE		"user.db"
 #define  WM_UPDATE_DEVNAME	WM_USER+123
 #define  WM_UPDATE_ICO		WM_USER+124
@@ -30,4 +29,4 @@ using namespace std;
 #define  WM_SELECT_SPEAK	WM_USER+200
 
 #define  WM_ERROR_TIP		WM_USER+404
-#define CFG_FILE	"express.txt"
+#define CFG_FILE	"express.logansoft.conf"

@@ -5,16 +5,18 @@
 #include "../Src/Video.h"
 #include "../Src/expresshead.h"
 #include "../Src/TCPSocket.h"
-
 #define UPDATE_PIC	1
 #define UPDATE_NAME 2
 #define UPDATE_MEM	3
 #define UPDATE_NONE -1
 
 
-//#include "../Src/Video.h"
-//#include "../Src/HttpRequest.h"
-//#include "../Src//ConfigFile.h"
+/*
+*  Main Window for ClassRoomAssistant-client(Listener)
+*
+*	Date:	2017-2-12 --- 2017-3-1
+*
+*/
 
 /* per classRoom data unit*/
 struct ItemData

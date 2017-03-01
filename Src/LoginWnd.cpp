@@ -315,8 +315,10 @@ DWORD WINAPI LoginProc(_In_ LPVOID paramer)
 	db::Close();
 	ConfigFile cfg(CFG_FILE);
 	cfg.addValue("login_ip", l->m_pEditIP->GetText().GetData(), "accout");
+	user_list::ip = cfg.getValue("login_ip", "accout");
 	cfg.save();
-	
+	user_list::login_user = l->m_pEditUser->GetText().GetData();
+	user_list::login_passwd = l->m_pEditPasswd->GetText().GetData();
 	::PostMessage(*l, WM_LOGIN_OK, NULL, NULL);
 
 	return 0;

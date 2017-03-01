@@ -13,6 +13,8 @@ TokenSystem<std::string, std::string> strToken::m_instance;
 
 std::string user_list::passwd;
 std::string user_list::user_name;
+std::string user_list::login_user;
+std::string user_list::login_passwd;
 std::string user_list::cgi;
 std::string user_list::ip;
 std::string user_list::server_ip;
