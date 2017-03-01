@@ -31,5 +31,4 @@ protected:
 	virtual ~ICjrCurl(){};
 };
 
-
 #endif

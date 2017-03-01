@@ -44,10 +44,12 @@ public:
 	void flushBk();
 	void fullSrc();
 	void HandlePlayerMsg(int nMsg, WPARAM wParam = 0, LPARAM lParam = 0);
+	inline int getvolume()const{ return m_volume; }
 private:
 	CVideoWnd *m_pwindows;
 	HWND oldParent;
 	bool is_full;
 	bool is_played;
+	int m_volume;
 	ILivePlayer *media_play;
 };

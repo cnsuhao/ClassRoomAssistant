@@ -165,6 +165,15 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			//none
 		}
 	}
+	else if (dataLength==0)
+	{
+		if (IDOK == TipMsg::ShowMsgWindow(*this, _T("服务器已经关闭，是否退出")))
+		{
+			release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
+			WaitForSingleObject(release_thread, 5000);
+			Close();
+		}
+	}
 }
 
 map<std::string, std::string> MainView::paraseCommand(const char* cmd)
@@ -279,6 +288,11 @@ void MainView::Notify(TNotifyUI& msg)
 			CVideoUI *video = static_cast<CVideoUI*>(m_PaintManager.FindControl(_T("mainVideo")));
 			video->fullSrc();
 		}
+	}
+	else if (msg.sType == _T("volume_change"))
+	{
+		CProgressUI* p = static_cast<CProgressUI*>(m_PaintManager.FindControl(_T("progress_voice")));
+		p->SetValue(m_pVideo->getvolume());
 	}
 }
 
@@ -548,7 +562,7 @@ DWORD WINAPI initProc(_In_ LPVOID paramer)
 		/*play video of login server*/
 		if (!p->class_list[user_list::ip].url.empty())
 		{
-			p->m_pVideo->play(p->class_list[user_list::ip].url);
+			//p->m_pVideo->play(p->class_list[user_list::ip].url);
 		}
 		/* then get info from network*/
 		bool bHad = false;
@@ -664,10 +678,12 @@ DWORD WINAPI releaseProc(_In_ LPVOID paramer)
 {
 	MainView *p = (MainView*)paramer;
 
-	for (std::map<std::string, ItemData>::iterator i = p->class_list.begin(); i != p->class_list.end();i++)
+	for (map<std::string, std::string>::iterator itor = strToken::getInstance().token_table.begin(); itor != strToken::getInstance().token_table.end(); itor++)
 	{
-		if(i->first!=user_list::ip)
-			Logan::logout(i->first, user_list::user_name);
+		if (itor->first != user_list::ip)
+			Logan::logout(itor->first, user_list::user_name);
+		else
+			Logan::logout(itor->first, user_list::login_user);
 	}
 	return 0;
 }

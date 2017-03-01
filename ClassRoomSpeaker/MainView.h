@@ -17,7 +17,12 @@
 
 #define  WM_REQUEST_JOIN	WM_USER+1000
 #define  WM_REQUEST_SPEAK	WM_USER+1001
-
+/*
+*  Main Window for ClassRoomAssistant-server(Speaker)
+*
+*	Date:	2017-2-12 --- 2017-3-1
+*
+*/
 
 class CICOControlUI : public CLabelUI
 {
@@ -102,6 +107,8 @@ private:
 
 struct small_video
 {
+	small_video():title(NULL),snd_on(NULL),snd_off(NULL),
+					video(NULL),teacher(NULL),student(NULL){}
 	CLabelUI* title;
 	CButtonUI* snd_on;
 	CButtonUI* snd_off;
@@ -151,7 +158,7 @@ private:
 	small_video video_list[6];
 private:
 	ITCPClient *client;
-
+	std::stack<small_video> free_stack;// free stack to save free video list
 	/* save class-data in hash-table */
 	std::map<std::string, ItemData>class_list;
 

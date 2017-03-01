@@ -2,11 +2,14 @@
 #include "../Src/LoginWnd.h"
 #ifdef CLIENT_LISTENER
 #include "../ClassRoomListener/MainView.h"
+#include "../ClassRoomListener/resource.h"
 #else
 #include "../ClassRoomSpeaker/MainView.h"
+#include "../ClassRoomSpeaker/resource.h"
 #endif
-#include <vld.h>
 
+
+#include <vld.h>
 int  _tWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPTSTR    lpCmdLine,
@@ -22,7 +25,7 @@ int  _tWinMain(HINSTANCE hInstance,
 			::SetForegroundWindow(h);
 		}
 		CloseHandle(Hmutex);
-		::MessageBox(0, _T("该程序正在运行"), _T("提示"), MB_OK);
+		::MessageBox(0, _T("有课堂助手程序在运行中..."), _T("提示"), MB_OK);
 		return EXIT_FAILURE;
 	}
 
@@ -33,17 +36,17 @@ int  _tWinMain(HINSTANCE hInstance,
 	user_list::init(CFG_FILE);
 	CPaintManagerUI::SetInstance(hInstance);
 	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
-
+	//CPaintManagerUI::SetResourceZip("skin.zip");
 	LoginWnd *login = new LoginWnd();
 	login->Create(NULL, _T("登录"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);
-	//login->SetIcon(IDI_ICON1);
+	login->SetIcon(IDI_ICON1);
 	login->CenterWindow();
 	UINT lres=login->ShowModal();
 	if (lres == 1)
 	{
 		MainView *mainview = new MainView();
 		mainview->Create(NULL, _T("mainPage"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);
-		//mainview->SetIcon(IDI_ICON1);
+		mainview->SetIcon(IDI_ICON1);
 		mainview->CenterWindow();
 		mainview->ShowModal();
 	}

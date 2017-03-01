@@ -114,10 +114,17 @@
     <ClInclude Include="..\Src\token.h" />
     <ClInclude Include="..\Src\Video.h" />
     <ClInclude Include="MainView.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SettingView.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ClassRoomListener1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="client.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
