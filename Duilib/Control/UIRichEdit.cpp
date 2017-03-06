@@ -1079,8 +1079,7 @@ CRichEditUI::CRichEditUI() : m_pTwh(NULL), m_bVScrollBarFixing(false), m_bWantTa
 
 CRichEditUI::~CRichEditUI()
 {
-    if( m_pTwh ) 
-	{
+    if( m_pTwh ) {
         m_pTwh->Release();
         m_pManager->RemoveMessageFilter(this);
     }

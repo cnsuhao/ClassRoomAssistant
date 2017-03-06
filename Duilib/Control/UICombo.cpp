@@ -286,7 +286,7 @@ bool CComboUI::SelectItem(int iIndex, bool bTakeFocus)
     if( iIndex >= m_items.GetSize() ) 
 		iIndex = m_items.GetSize() - 1;
     CControlUI* pControl = static_cast<CControlUI*>(m_items[iIndex]);
-    if( !pControl || !pControl->IsVisible() || !pControl->IsEnabled() ) 
+    if( !pControl /*|| !pControl->IsVisible()*/ || !pControl->IsEnabled() ) 
 		return false;
     IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
     if( pListItem == NULL )
@@ -926,7 +926,8 @@ void CComboUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         SetItemLineColor(clrColor);
     }
     else if( _tcscmp(pstrName, _T("itemshowhtml")) == 0 ) SetItemShowHtml(_tcscmp(pstrValue, _T("true")) == 0);
-    else CContainerUI::SetAttribute(pstrName, pstrValue);
+    else if( _tcscmp(pstrName, _T("selectedid")) == 0 ) SelectItem(_ttoi(pstrValue));
+	else CContainerUI::SetAttribute(pstrName, pstrValue);
 }
 
 void CComboUI::DoPaint(HDC hDC, const RECT& rcPaint)

@@ -131,8 +131,10 @@ namespace DuiLib
 
 	void CTabLayoutUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
-		if( _tcscmp(pstrName, _T("selectedid")) == 0 ) SelectItem(_ttoi(pstrValue));
-		return CContainerUI::SetAttribute(pstrName, pstrValue);
+		if( _tcscmp(pstrName, _T("selectedid")) == 0 ) 
+			SelectItem(_ttoi(pstrValue));
+		else
+			return CContainerUI::SetAttribute(pstrName, pstrValue);
 	}
 
 	void CTabLayoutUI::SetPos(RECT rc)
@@ -250,7 +252,7 @@ namespace DuiLib
 				m_bControlVisibleFlag = false;
 				m_pCurrentControl = static_cast<CControlUI*>(m_items[it]);
 				if( NULL != m_pCurrentControl )
-					m_pCurrentControl->SetVisible( true );
+					m_pCurrentControl->SetVisible( false );
 				AnimationSwitch();
 			}
 			else GetItemAt(it)->SetVisible(false);
@@ -377,8 +379,10 @@ namespace DuiLib
 
 	void CAnimationTabLayoutUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
-		if( _tcscmp(pstrName, _T("animation_direction")) == 0 && _tcscmp( pstrValue, _T("vertical")) == 0 ) m_bIsVerticalDirection = true; // pstrValue = "vertical" or "horizontal"
-		return CTabLayoutUI::SetAttribute(pstrName, pstrValue);
+		if( _tcscmp(pstrName, _T("animation_direction")) == 0 && _tcscmp( pstrValue, _T("vertical")) == 0 )
+			m_bIsVerticalDirection = true; // pstrValue = "vertical" or "horizontal"
+		else
+			return __super::SetAttribute(pstrName, pstrValue);
 	}
 
 

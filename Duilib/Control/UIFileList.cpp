@@ -397,13 +397,7 @@ namespace DuiLib
 			else 
 				html_text += m_sExpandImg;
 		}
-		if( !node->LeafFlag )
-		{
-			if( node->data()._expand ) 
-				html_text += _T("<a><i notexpand.png></a>");
-			else 
-				html_text += _T("<a><i expand.png></a>");
-		}
+
 		node->data()._expandText = html_text;
 
 		CDuiString sTemp =  node->data()._expandText;
@@ -533,8 +527,8 @@ namespace DuiLib
 		if( !node || node == _root ) 
 			return CSize();
 
-	/*	if( node->LeafFlag )
-			return CSize();*/
+		if( node->LeafFlag )
+			return CSize();
 
 		SIZE szExpander = {0};
 		szExpander.cx += 6 + 24 * node->data()._level;

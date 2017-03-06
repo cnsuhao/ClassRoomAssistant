@@ -32,7 +32,6 @@ namespace DuiLib
 		int _level;
 		bool _expand;
 		bool _select;
-		bool loaded;
 		CDuiString _expandText;
 		CDuiString _selectionBoxText;
 		CDuiString _text;

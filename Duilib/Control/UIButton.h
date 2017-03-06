@@ -95,7 +95,6 @@ namespace DuiLib
 		int m_nPreUpdateDelay;
 	};
 
-
 }	// namespace DuiLib
 
 #endif // __UIBUTTON_H__

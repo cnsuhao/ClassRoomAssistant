@@ -58,11 +58,11 @@ namespace DuiLib
 		virtual LPCTSTR GetWindowClassName(void) const = 0 ;
 		LRESULT ResponseDefaultKeyEvent(WPARAM wParam);
 
-		bool		m_bInit;
-		CPaintManagerUI m_PaintManager;
-		static LPBYTE m_lpResourceZIPBuffer;
+		void KeepTOSide_Show();
+		void KeepTOSide_Hide();
 
-	public:
+		bool OnAnimateClose();
+
 		virtual UINT GetClassStyle() const;
 		virtual CDuiString GetZIPFileName() const;
 		virtual CControlUI* CreateControl(LPCTSTR pstrClass);
@@ -100,15 +100,18 @@ namespace DuiLib
 		virtual LRESULT OnMenu(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		void KeepTOSide_Show();
-		void KeepTOSide_Hide();
-		bool OnAnimateClose();
 		//文件拖曳回调
 		static void OnDropFiles(WindowImplBase* pObj, HDROP hDrop);
 		friend void OnDropFiles(WindowImplBase* pObj, HDROP hDrop);
 
+	public:
+		bool		m_bInit;
+		CPaintManagerUI m_PaintManager;
+		static LPBYTE m_lpResourceZIPBuffer;
+
 	private:
 		CDuiRect	m_rcCurRect;		//窗口当前位置及大小
+		CDuiRect	m_rcSizeBox;		
 		BOOL		m_bHided;			//是否隐藏
 		int			m_iDockState;		//当前停靠状态
 		bool		m_bKeepToSide;		//靠边隐藏与否
