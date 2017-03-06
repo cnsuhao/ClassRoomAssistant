@@ -93,7 +93,7 @@ void LoginWnd::init_self()
 	m_pEditIP = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("ip")));
 	m_pEditUser = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("user")));
 	m_pEditPasswd = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("passwd")));
-	m_pTabSwitch = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("TabLay")));
+	m_pTabSwitch = static_cast<CAnimationTabLayoutUI*>(m_PaintManager.FindControl(_T("TabLay")));
 	m_pLabTip = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lab_tip")));
 	m_pLabImage = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lab_ico")));
 }
@@ -256,6 +256,7 @@ LRESULT LoginWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		OutputDebugStringA("login-ok");
 		Close(1);
+		return 0;
 	}
 	else
 		return __super::HandleMessage(uMsg, wParam, lParam);
@@ -326,7 +327,7 @@ DWORD WINAPI LoginProc(_In_ LPVOID paramer)
 
 CControlUI* LoginWnd::CreateControl(LPCTSTR pstrClass)
 {
-	if (0 == _tcscmp(pstrClass, _T("AnimationTabLayout")))
+	if (_tcscmp(pstrClass, _T("AnimationTabLayout")) == 0)
 	{
 		return new CAnimationTabLayoutUI;
 	}
@@ -380,7 +381,10 @@ std::string Logan::parse_msg_node(std::string document)
 		}
 		else if (strcmp(node->Value(), "msg") == 0)
 		{
-			msg = string(node->FirstChild()->Value());
+			TiXmlNode* pTemp = node->FirstChild();
+			if(pTemp)
+				msg = string(pTemp->Value());
+			else msg="";
 		}
 	}
 	if (code == "1")
@@ -492,4 +496,88 @@ bool Logan::download(std::string upLoadUrl, std::string local_path)
 bool Logan::file_exist(const std::string path)
 {
 	return (_access(path.c_str(), NULL) != -1);
+}
+
+bool Logan::start_record(std::string ip, Record_type state)
+{
+	char s[5];
+	itoa(state, s, 10);
+	std::string request_url = "http://" + ip + "/" + user_list::cgi + "&type=record&state=" + s;
+	try
+	{
+		query_msg_node(request_url, ip);
+		return true;
+	}
+	catch (std::exception& e)
+	{
+	std::exception te("Â¼ÖÆÊ§°Ü");
+	throw te;
+	}
+	return false;
+}
+
+void Logan::switch_view(std::string ip, unsigned view)
+{
+	char s[5];
+	itoa(view, s, 10);
+	std::string request_url = "http://" + ip + "/" + user_list::cgi + "type=setdirview&view=" + s;
+	query_msg_node(request_url, ip);
+}
+
+Logan::Record_Info Logan::query_record_info(std::string ip)
+{
+	std::string request_url = "http://" + ip + "/" + user_list::cgi + "type=queryrecord";
+	strToken::tokenTable_type token_table = strToken::getInstance();
+	std::string res = HttpRequest::request(request_url + "&token=" + token_table.getValue(ip));
+
+	Logan::Record_Info info = {Logan::E_stop,"",""};
+
+	TiXmlDocument xml;
+	string code, msg;
+	xml.Parse(res.c_str());
+	TiXmlNode *root = xml.RootElement();
+	for (TiXmlNode *ir = root->FirstChildElement(); ir; ir = ir->NextSiblingElement())
+	{
+		if (strcmp(ir->Value(), "code") == 0)
+		{
+			code = string(ir->FirstChild()->Value());
+		}
+		else if (strcmp(ir->Value(), "msg") == 0)
+		{
+			if (ir->FirstChild())
+				msg = string(ir->FirstChild()->Value());
+			if (code != "1")
+			{
+				throw std::exception(msg.c_str());
+			}
+		}
+		else if (strcmp(ir->Value(), "data") == 0)
+		{
+			ir = ir->FirstChildElement()->FirstChildElement();
+			if (ir)
+			{
+				for (ir; ir; ir = ir->NextSiblingElement())
+				{
+					if (strcmp(ir->Value(), "state") == 0)
+					{
+						if (ir->FirstChild())
+							info.state = (Logan::Record_type)(atoi(ir->FirstChild()->Value()));
+					}
+					else if (strcmp(ir->Value(), "size") == 0)
+					{
+						if (ir->FirstChild())
+							info.size_capacity = ir->FirstChild()->Value();
+					}
+					else if (strcmp(ir->Value(), "time") == 0)
+					{
+						if (ir->FirstChild())
+							info.time_long = ir->FirstChild()->Value();
+						break;
+					}
+				}
+			}
+			break;
+		}
+	}
+	return info;
 }

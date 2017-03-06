@@ -11,6 +11,7 @@ public:
 	LPCTSTR GetWindowClassName()const;
 	CDuiString GetSkinFile();
 	CDuiString GetSkinFolder();
+	void OnUpdate_name(std::string new_name);
 private:
 	void Notify(TNotifyUI& msg);
 	void Init();

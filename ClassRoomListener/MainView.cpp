@@ -7,6 +7,8 @@
 #define  TIME_ID_UPDATE_TIME	1001
 #define  TIME_ID_NOTIFY			1002
 
+#include "../Src/CMyCharConver.h"
+
 MainView::MainView() :
 client(NULL),
 init_thread(NULL), 
@@ -105,9 +107,17 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 				CloseHandle(update_thread);
 			}
 			just_join_update_name = res["ip"];
-			class_list[just_join_update_name].name = res["name"];
+			if (just_join_update_name == user_list::server_ip)
+			{
+				update_serverName = CMyCharConver::UTF8ToANSI(res["name"]);
+			}
+			else if (class_list.find(just_join_update_name) != class_list.end())
+			{
+				class_list[res["ip"]].name = res["name"];
+			}
 			ConfigFile cf(CFG_FILE);
 			cf.addValue("name", res["name"], just_join_update_name);
+			cf.save();
 			update_thread = CreateThread(NULL, 0, updateProc, (void*)this, NULL, 0);
 		}
 		else if (res["type"] == "UpdatePicture")
@@ -141,6 +151,7 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			if (!class_list[user_list::ip].url.empty())
 			{
 				m_pConnect->SetText(_T("请求连接"));
+				m_pHudong->SetText(_T("请求互动"));
 				if (m_pVideo->is_playing())
 					m_pVideo->stop();
 				m_pVideo->play(class_list[user_list::ip].url);
@@ -167,12 +178,12 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 	}
 	else if (dataLength==0)
 	{
-		if (IDOK == TipMsg::ShowMsgWindow(*this, _T("服务器已经关闭，是否退出")))
+		if (IDOK == TipMsg::ShowMsgWindowTime(*this, 3000, _T("远程服务器已关闭")))
 		{
-			release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
-			WaitForSingleObject(release_thread, 5000);
-			Close();
 		}
+		release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
+		WaitForSingleObject(release_thread, 5000);
+		Close();
 	}
 }
 
@@ -270,15 +281,24 @@ void MainView::Notify(TNotifyUI& msg)
 				client->sendData(data, strlen(data));
 				ManagerItem::Remove(m_pCalssLay, user_list::ip.c_str());
 				msg.pSender->SetText(_T("请求连接"));
+				if (m_pHudong->GetText() == _T("互动中..."))
+				{
+					m_pHudong->SetText(_T("请求互动"));
+				}
 			}
 			
 		}
 		else if (msg.pSender==m_pHudong)
 		{
-			string str = "type=RequestSpeak&ip=" + user_list::ip;
-			char data[50];
-			strcpy(data, str.c_str());
-			client->sendData(data, strlen(data));
+			if (m_pConnect->GetText()==_T("断开连接") && m_pHudong->GetText()==_T("请求互动"))
+			{
+				string str = "type=RequestSpeak&ip=" + user_list::ip;
+				char data[50];
+				strcpy(data, str.c_str());
+				client->sendData(data, strlen(data));
+				m_pHudong->SetText(_T("互动中..."));
+			}
+			
 		}
 	}
 	else if(msg.sType==DUI_MSGTYPE_DBCLICK)
@@ -312,19 +332,28 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	else if (uMsg == WM_ERROR_TIP)
 	{
 		TipMsg::ShowMsgWindow(*this, error_msg.c_str());
+		return 0;
 	}
 	else if (uMsg == WM_UPDATE_DEVNAME || uMsg == WM_UPDATE_ICO)
 	{
 		classItemUI *item = ManagerItem::getItem(user_list::ip.c_str());
 		if (uMsg == WM_UPDATE_ICO)
 		{
-			update_pic(user_list::ip);
-			if (item)
+			try
+			{
+				update_pic(user_list::ip);
+				if (item)
 				item->setImage(class_list[user_list::ip].path.c_str());
-			std::string str = "type=UpdatePicture&ip=" + user_list::ip;
-			char data[50];
-			strcpy(data, str.c_str());
-			client->sendData(data, strlen(data));
+				std::string str = "type=UpdatePicture&ip=" + user_list::ip;
+				char data[50];
+				strcpy(data, str.c_str());
+				client->sendData(data, strlen(data));
+			}
+			catch (std::exception& e)
+			{
+				error_msg = e.what();
+				::PostMessageA(*this, WM_ERROR_TIP, NULL, NULL);
+			}
 		}
 		else
 		{
@@ -332,10 +361,11 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (item)
 				item->setTitle(class_list[user_list::ip].name.c_str());
 			std::string str = "type=UpdateDevName&ip=" + user_list::ip + "&name=" + class_list[user_list::ip].name;
-			char data[50];
+			char data[200];
 			strcpy(data, str.c_str());
 			client->sendData(data, strlen(data));
 		}
+		return 0;
 
 	}
 	else
@@ -514,7 +544,7 @@ void MainView::msg_coming(const std::string tip)
 	m_pNotify->SetText(tip.c_str());
 	m_pNotifyLay->SetVisible(true);
 	PlaySoundA("msg.wav", NULL, SND_ASYNC | SND_FILENAME);
-	SetTimer(*this, TIME_ID_NOTIFY, 400, NULL);
+	SetTimer(*this, TIME_ID_NOTIFY, 600, NULL);
 }
 
 void MainView::DisplayDateTime()
@@ -626,18 +656,38 @@ DWORD WINAPI updateProc(_In_ LPVOID paramer)
 		if (p->current_update_state == UPDATE_PIC)
 		{
 			p->update_pic(p->just_join_update_pic);
-			classItemUI *item = ManagerItem::getItem(p->just_join_update_pic.c_str());
-			if (!p->class_list[p->just_join_update_pic].path.empty() && Logan::file_exist(p->class_list[p->just_join_update_pic].path))
-				item->setImage(p->class_list[p->just_join_update_pic].path.c_str());
-			p->msg_coming(p->class_list[p->just_join_update_pic].name + "更新了头像");
+
+			// Speaker 
+			if (p->just_join_update_pic == user_list::server_ip)
+			{
+				if (Logan::file_exist(p->class_list[p->just_join_update_pic].path))
+					p->m_pServerPic->SetBkImage(p->class_list[p->just_join_update_pic].path.c_str());
+				p->msg_coming("讲课端更新了头像");
+			}
+			else if (p->class_list.find(p->just_join_update_pic) != p->class_list.end())
+			{
+				classItemUI *item = ManagerItem::getItem(p->just_join_update_pic.c_str());
+				if (Logan::file_exist(p->class_list[p->just_join_update_pic].path))
+					item->setImage(p->class_list[p->just_join_update_pic].path.c_str());
+				p->msg_coming(p->class_list[p->just_join_update_pic].name + "更新了头像");
+			}
 			p->current_update_state = UPDATE_NONE;
 		}
 		else if (p->current_update_state == UPDATE_NAME)
 		{
+			// Speaker 
 			p->update_name(p->just_join_update_name);
-			classItemUI *item = ManagerItem::getItem(p->just_join_update_name.c_str());
-			item->setTitle(p->class_list[p->just_join_update_name].name.c_str());
-			p->msg_coming(p->class_list[p->just_join_update_name].name + "更新了名称");
+			if (p->just_join_update_name == user_list::server_ip)
+			{
+				p->m_pServerName->SetText(p->class_list[p->just_join_update_name].name.c_str());
+				p->msg_coming("讲课端更新了名称");
+			}
+			else if (p->class_list.find(p->just_join_update_name) != p->class_list.end())
+			{
+				classItemUI *item = ManagerItem::getItem(p->just_join_update_name.c_str());
+				item->setTitle(p->class_list[p->just_join_update_name].name.c_str());
+				p->msg_coming(p->class_list[p->just_join_update_name].name + "更新了名称");
+			}
 			p->current_update_state = UPDATE_NONE;
 		}
 		else if (p->current_update_state == UPDATE_MEM)
@@ -719,7 +769,8 @@ LPCTSTR classItemUI::getIP()const
 
 void classItemUI::setImage(LPCTSTR pstr_image)
 {
-	m_pICO->SetBkImage(pstr_image);
+	CDuiString s=pstr_image;
+	m_pICO->SetBkImage(s);
 }
 
 LPCTSTR classItemUI::getImage()const

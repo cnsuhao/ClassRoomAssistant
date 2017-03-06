@@ -139,6 +139,7 @@ private:
 
 	std::string chat_ip;
 
+	std::string update_serverName;
 	/* save class-data in hash-table */
 	std::map<std::string, ItemData>class_list;
 
