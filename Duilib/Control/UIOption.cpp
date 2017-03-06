@@ -63,12 +63,16 @@ namespace DuiLib
 		return m_bSelected;
 	}
 
-	void COptionUI::Selected(bool bSelected)
+	void COptionUI::Selected(bool bSelected, bool bSendMsg)
 	{
-		if( m_bSelected == bSelected ) return;
+		if( m_bSelected == bSelected ) 
+			return;
+
 		m_bSelected = bSelected;
-		if( m_bSelected ) m_uButtonState |= UISTATE_SELECTED;
-		else m_uButtonState &= ~UISTATE_SELECTED;
+		if( m_bSelected ) 
+			m_uButtonState |= UISTATE_SELECTED;
+		else 
+			m_uButtonState &= ~UISTATE_SELECTED;
 
 		if( m_pManager != NULL ) 
 		{
@@ -82,16 +86,18 @@ namespace DuiLib
 					{
 						COptionUI* pControl = static_cast<COptionUI*>(aOptionGroup->GetAt(i));
 						if( pControl != this ) 
-							pControl->Selected(false);
+							pControl->Selected(false, bSendMsg);
 						else 
 							nIndex = i;
 					}
-					m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED,1,nIndex);
+					if(bSendMsg)
+						m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED,1,nIndex);
 				}
 			}
 			else 
 			{
-				m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED,0);
+				if(bSendMsg)
+					m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED,0,m_bSelected);
 			}
 		}
 
@@ -110,9 +116,17 @@ namespace DuiLib
 	void COptionUI::SetEnabled(bool bEnable)
 	{
 		CControlUI::SetEnabled(bEnable);
-		if( !IsEnabled() ) {
-			if( m_bSelected ) m_uButtonState = UISTATE_SELECTED;
-			else m_uButtonState = 0;
+		if( !IsEnabled() ) 
+		{
+#if 0
+			if( m_bSelected ) 
+				m_uButtonState = UISTATE_SELECTED;
+			else 
+				m_uButtonState = 0;
+#else
+			m_bSelected = false;
+			m_uButtonState &= ~UISTATE_SELECTED;
+#endif
 		}
 	}
 
@@ -235,17 +249,21 @@ namespace DuiLib
 	{
 		m_uButtonState &= ~UISTATE_PUSHED;
 
-		if( (m_uButtonState & UISTATE_HOT) != 0 && IsSelected() && !m_sSelectedHotImage.IsEmpty()) {
+		if( (m_uButtonState & UISTATE_HOT) != 0 && IsSelected() && !m_sSelectedHotImage.IsEmpty())
+		{
 			if( !DrawImage(hDC, (LPCTSTR)m_sSelectedHotImage) )
 				m_sSelectedHotImage.Empty();
 			else goto Label_ForeImage;
 		}
-		else if( (m_uButtonState & UISTATE_SELECTED) != 0 ) {
-			if( !m_sSelectedImage.IsEmpty() ) {
+		else if( (m_uButtonState & UISTATE_SELECTED) != 0 ) 
+		{
+			if( !m_sSelectedImage.IsEmpty() ) 
+			{
 				if( !DrawImage(hDC, (LPCTSTR)m_sSelectedImage) ) m_sSelectedImage.Empty();
 				else goto Label_ForeImage;
 			}
-			else if(m_dwSelectedBkColor != 0) {
+			else if(m_dwSelectedBkColor != 0)
+			{
 				CRenderEngine::DrawColor(hDC, m_rcPaint, GetAdjustColor(m_dwSelectedBkColor));
 				return;
 			}	

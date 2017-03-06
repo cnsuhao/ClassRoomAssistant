@@ -479,29 +479,34 @@ LRESULT WindowImplBase::OnMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	if (m_bKeepToSide)
 	{
 		GetWindowRect(m_hWnd,&m_rcCurRect);
-		if (m_rcCurRect.left <= 0)
+		if(!m_rcCurRect.IsNull())
 		{
-			if(m_iDockState == DOCK_LEFT)
-				return 0;
-			m_iDockState = DOCK_LEFT;
-			KeepTOSide_Hide();
+			if (m_rcCurRect.left <= 0)
+			{
+				if(m_iDockState == DOCK_LEFT)
+					return 0;
+				m_iDockState = DOCK_LEFT;
+				KeepTOSide_Hide();
+			}
+			else if (m_rcCurRect.top <= 0)
+			{
+				if(m_iDockState == DOCK_TOP)
+					return 0;
+				m_iDockState = DOCK_TOP;
+				KeepTOSide_Hide();
+			}
+			else if (m_rcCurRect.right >= ::GetSystemMetrics(SM_CXSCREEN))
+			{
+				if(m_iDockState == DOCK_RIGHT)
+					return 0;
+				m_iDockState = DOCK_RIGHT;
+				KeepTOSide_Hide();
+			}
+			else if(m_rcCurRect.left !=0 && m_rcCurRect.top != 0)
+				m_iDockState = DOCK_IDLE;
+
+			bHandled = TRUE;
 		}
-		else if (m_rcCurRect.top <= 0)
-		{
-			if(m_iDockState == DOCK_TOP)
-				return 0;
-			m_iDockState = DOCK_TOP;
-			KeepTOSide_Hide();
-		}
-		else if (m_rcCurRect.right >= ::GetSystemMetrics(SM_CXSCREEN))
-		{
-			if(m_iDockState == DOCK_RIGHT)
-				return 0;
-			m_iDockState = DOCK_RIGHT;
-			KeepTOSide_Hide();
-		}
-		else if(m_rcCurRect.left !=0 && m_rcCurRect.top != 0)
-			m_iDockState = DOCK_IDLE;
 	}
 	
 	return 0;
@@ -635,6 +640,10 @@ void WindowImplBase::KeepTOSide_Show()
 	if(m_bHided)
 	{
 		m_bHided = FALSE;
+
+		if(!m_rcSizeBox.IsNull())
+			m_PaintManager.SetSizeBox(m_rcSizeBox);
+
 		int iWidth,iHeight;
 		switch(m_iDockState)
 		{
@@ -660,31 +669,41 @@ void WindowImplBase::KeepTOSide_Hide()
 {
 	if(!IsZoomed(m_hWnd))
 	{
-		if(!m_bHided)
+		m_bHided = TRUE;
+
+		CDuiRect rcSizeBox = m_PaintManager.GetSizeBox();
+		if(!rcSizeBox.IsNull())
 		{
-			m_bHided = TRUE;
-			int iWidth,iHeight;
-			switch(m_iDockState)
+			m_rcSizeBox = rcSizeBox;
+			m_PaintManager.SetSizeBox(CDuiRect(0,0,0,0));
+		}
+
+		switch(m_iDockState)
+		{
+		case DOCK_LEFT:
 			{
-			case DOCK_LEFT:
-				iWidth = m_rcCurRect.GetWidth();
+				int iWidth = m_rcCurRect.GetWidth();
 				m_rcCurRect.left = 0;
 				m_rcCurRect.right = iWidth;
 				m_rcCurRect.Offset(-iWidth+2,0);
-				break;
-			case DOCK_TOP:
-				iHeight = m_rcCurRect.GetHeight();
+			}
+			break;
+		case DOCK_TOP:
+			{
+				int iHeight = m_rcCurRect.GetHeight();
 				m_rcCurRect.top = 0;
 				m_rcCurRect.bottom = iHeight;
 				m_rcCurRect.Offset(0,-iHeight+2);
-				break;
-			case DOCK_RIGHT:
-				iWidth = ::GetSystemMetrics(SM_CXSCREEN)-m_rcCurRect.left;
-				m_rcCurRect.Offset(iWidth-2,0);
-				break;
 			}
-			SetWindowPos(m_hWnd,HWND_TOPMOST,m_rcCurRect.left,m_rcCurRect.top,m_rcCurRect.GetWidth(),m_rcCurRect.GetHeight(),SWP_SHOWWINDOW);
+			break;
+		case DOCK_RIGHT:
+			{
+				int iWidth = ::GetSystemMetrics(SM_CXSCREEN)-m_rcCurRect.left;
+				m_rcCurRect.Offset(iWidth-2,0);
+			}
+			break;
 		}
+		SetWindowPos(m_hWnd,NULL,m_rcCurRect.left,m_rcCurRect.top,m_rcCurRect.GetWidth(),m_rcCurRect.GetHeight(),SWP_SHOWWINDOW|SWP_NOZORDER);
 	}
 }
 

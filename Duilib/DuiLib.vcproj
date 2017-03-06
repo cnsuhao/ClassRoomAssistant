@@ -109,7 +109,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)ListenerBin"
+			OutputDirectory="$(SolutionDir)lib\"
 			IntermediateDirectory="$(OutDir)obj\$(ProjectName)\"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
@@ -170,7 +170,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../ListenerBin/DuiLib_d.dll"
+				OutputFile="../bin/DuiLib_d.dll"
 				GenerateDebugInformation="true"
 				ImportLibrary="../lib/DuiLib_d.lib"
 			/>
