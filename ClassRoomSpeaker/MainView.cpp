@@ -20,6 +20,7 @@ MainView::MainView() :
 client(NULL),
 init_thread(NULL),
 update_thread(NULL),
+sync_thread(NULL),
 m_pData(NULL),
 m_pTime(NULL),
 m_pNotify(NULL),
@@ -28,7 +29,11 @@ m_pCalssLay(NULL),
 current_update_state(-1),
 m_pStateOn(NULL),
 m_pStateOff(NULL),
-m_pVideo(NULL)
+m_pVideo(NULL),
+m_pRecord(NULL),
+m_pPause(NULL),
+m_pStop(NULL),
+need_sync(false)
 {
 	if (!client)
 	{
@@ -47,6 +52,10 @@ MainView::~MainView()
 		ITCPClient::releaseInstance(client);
 	}
 
+	if (sync_thread)
+	{
+		CloseHandle(sync_thread);
+	}
 	if (init_thread)
 	{
 		CloseHandle(init_thread);
@@ -125,6 +134,8 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			}
 			just_join_update_name = res["ip"];
 			class_list[just_join_update_name].name = res["name"];
+			if (class_list[just_join_update_name].media.title)
+				class_list[just_join_update_name].media.title->SetText(res["name"].c_str());
 			ConfigFile cf(CFG_FILE);
 			cf.addValue("name", res["name"], just_join_update_name);
 			update_thread = CreateThread(NULL, 0, updateProc, (void*)this, NULL, 0);
@@ -159,7 +170,7 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 			cfg.addValue(str, "", "remote");
 			cfg.save();
 			class_list.erase(class_list.find(res["ip"]));
-			if (class_list.find(user_list::ip) == class_list.end())
+			if (class_list.empty())
 			{
 				update_connect_state(false);
 			}
@@ -171,7 +182,6 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 		else if (res["type"] == "RequestJoin")
 		{
 			current_update_state = UPDATE_MEM;
-			update_connect_state(true);
 			if (update_thread)
 			{
 				WaitForSingleObject(update_thread, 3000);
@@ -188,12 +198,12 @@ void MainView::Recv(SOCKET sock, const char* ip, const int port, char* data, int
 	}
 	else if (dataLength == 0)
 	{
-		if (IDOK == TipMsg::ShowMsgWindow(*this, _T("服务器已经关闭，是否退出")))
+		if (IDOK == TipMsg::ShowMsgWindowTime(*this,3000, _T("远程服务器已关闭")))
 		{
-			release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
-			WaitForSingleObject(release_thread, 5000);
-			Close();
 		}
+		release_thread = CreateThread(NULL, 0, releaseProc, this, NULL, NULL);
+		WaitForSingleObject(release_thread, 5000);
+		Close();
 	}
 }
 
@@ -253,7 +263,47 @@ void MainView::Notify(TNotifyUI& msg)
 			setview->CenterWindow();
 			setview->ShowModal();			
 		}
+		else if (msg.pSender->GetName() == _T("btn_record"))
+		{
+			if (Logan::start_record(user_list::ip, Logan::E_start))
+			{
+				m_pRecord->SetVisible(false);
+				m_pPause->SetVisible(true);
+				need_sync = true;
+			}
+		}
+		else if (msg.pSender->GetName() == _T("btn_pause"))
+		{
+			if (Logan::start_record(user_list::ip, Logan::E_pause))
+			{
+				m_pRecord->SetVisible(true);
+				m_pPause->SetVisible(false);
+				need_sync = false;
+			}
+		}
+		else if (msg.pSender->GetName() == _T("btn_stop"))
+		{
+			if (Logan::start_record(user_list::ip, Logan::E_stop))
+			{
+				m_pRecord->SetVisible(true);
+				m_pPause->SetVisible(false);
+				need_sync = false;
+			}
+		}
 		
+		for (map<string, ItemData>::iterator itor = class_list.begin(); itor != class_list.end(); itor++)
+		{
+			if (msg.pSender == itor->second.media.teacher)
+			{
+				Logan::switch_view(itor->first, 0);
+				break;
+			}
+			else if (msg.pSender==itor->second.media.student)
+			{
+				Logan::switch_view(itor->first, 1);
+				break;
+			}
+		}
 
 	}
 	if (msg.sType == DUI_MSGTYPE_DBCLICK)
@@ -270,52 +320,6 @@ void MainView::Notify(TNotifyUI& msg)
 				video->SetVisible(hor->IsVisible());
 			}	
 		}
-		/*
-		else if (msg.pSender->GetName() == _T("video1"))
-		{
-			static bool is_play = false;
-			if (!is_play)
-				subVideo[0].video->play("rtmp://192.168.8.236:1935/live/slive");
-			else
-				subVideo[0].video->stop();
-			is_play=!is_play;
-		}
-		else if (msg.pSender->GetName() == _T("video2"))
-		{
-			static bool is_play = false;
-			if (!is_play)
-				subVideo[1].video->play("rtmp://192.168.8.236:1935/live/slive");
-			else
-				subVideo[1].video->stop();
-			is_play=!is_play;
-		}
-		else if (msg.pSender->GetName() == _T("video3"))
-		{
-			static bool is_play = false;
-			if (!is_play)
-				subVideo[2].video->play("rtmp://192.168.8.236:1935/live/slive");
-			else
-				subVideo[2].video->stop();
-			is_play=!is_play;
-		}
-		else if (msg.pSender->GetName() == _T("video4"))
-		{
-			static bool is_play = false;
-			if (!is_play)
-				subVideo[3].video->play("rtmp://192.168.8.236:1935/live/slive");
-			else
-				subVideo[3].video->stop();
-			is_play=!is_play;
-		}
-		else if (msg.pSender->GetName() == _T("video5"))
-		{
-			static bool is_play = false;
-			if (!is_play)
-				subVideo[4].video->play("rtmp://192.168.8.236:1935/live/slive");
-			else
-				subVideo[4].video->stop();
-			is_play=!is_play;
-		}*/
 	}
 	else if (msg.sType==_T("online"))
 	{
@@ -323,6 +327,11 @@ void MainView::Notify(TNotifyUI& msg)
 		hor_notify->SetVisible(true);
 		PlaySound(_T("mgg.wav"), NULL, SND_ASYNC);
 		SetTimer(*this, TIME_ID_NOTIFY, 400, NULL);
+	}
+	else if (msg.sType == _T("volume_change"))
+	{
+		CProgressUI* pro = static_cast<CProgressUI*>(m_PaintManager.FindControl(_T("progress_voice")));
+		pro->SetValue(m_pVideo->getvolume());
 	}
 }
 
@@ -358,10 +367,10 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			ManagerItem::Add(m_pCalssLay, item);
 			msg_coming(class_list[just_join_member].name + "上线了");
 			std::string sstr = "type=JoinMeeting&ip=" + just_join_member + "&name=" + class_list[just_join_member].name;
-			char data[80];
+			char data[200];
 			strcpy(data, sstr.c_str());
 			client->sendData(data,strlen(data));
-
+			update_connect_state(true);
 			small_video tmp_video;
 			if (class_list[just_join_member].media.video)
 			{
@@ -373,6 +382,9 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				class_list[just_join_member].media = tmp_video;
 				free_stack.pop();
 			}
+			CHorizontalLayoutUI* hor = static_cast<CHorizontalLayoutUI*>(m_PaintManager.FindControl(_T("SubVideoLay")));
+			if (!hor->IsVisible())
+				hor->SetVisible(true);
 			// play video
 			tmp_video.title->SetText(class_list[just_join_member].name.c_str());
 			if (!class_list[just_join_member].url.empty())
@@ -390,7 +402,7 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (IDOK == TipMsg::ShowMsgWindowTime(*this, 5000, class_list[just_join_speak].name+"请求发言"))
 		{
 			std::string sstr = "type=SelChat&ip=" + just_join_speak;
-			char data[80];
+			char data[200];
 			strcpy(data, sstr.c_str());
 			client->sendData(data, strlen(data));
 			selected_speak(just_join_speak);
@@ -399,8 +411,9 @@ LRESULT MainView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	else if (uMsg==WM_UPDATE_DEVNAME)
 	{
-		string s = "type=UpdateDevName&ip="+user_list::ip+"&name="+class_list[user_list::ip].name;
-		char data[80];
+		ConfigFile cf(CFG_FILE);
+		string s = "type=UpdateDevName&ip="+user_list::ip+"&name="+cf.getValue("name",user_list::ip);
+		char data[200];
 		strcpy(data, s.c_str());
 		client->sendData(data,strlen(data));
 		return 0;
@@ -458,11 +471,22 @@ void MainView::Init()
 	m_pStateOn = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lab_class_status_on")));
 	m_pStateOff = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lab_class_status")));
 	m_pVideo = static_cast<CVideoUI*>(m_PaintManager.FindControl(_T("mainVideo")));
+	m_pPause = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btn_pause")));
+	m_pRecord = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btn_record")));
+	m_pStop = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btn_stop")));
+	m_pRecordTime = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("record_time"))); 
 	init_videoList();
 	/* hide notify lay*/
 	m_pNotifyLay->SetVisible(false);
 	/* show real-dataTime */
 	SetTimer(*this, TIME_ID_UPDATE_TIME, 999, NULL);
+
+	/* sync record time*/
+	if (!sync_thread)
+	{
+		sync_thread = CreateThread(NULL, 0, syncProc, this, NULL, NULL);
+	}
+	need_sync = true;
 
 }
 void MainView::update_name(const std::string ip)
@@ -627,7 +651,7 @@ void MainView::msg_coming(const std::string tip)
 	m_pNotify->SetText(tip.c_str());
 	m_pNotifyLay->SetVisible(true);
 	PlaySoundA("msg.wav", NULL, SND_ASYNC | SND_FILENAME);
-	SetTimer(*this, TIME_ID_NOTIFY, 400, NULL);
+	SetTimer(*this, TIME_ID_NOTIFY, 600, NULL);
 }
 void MainView::DisplayDateTime()
 {
@@ -790,20 +814,26 @@ DWORD WINAPI updateProc(_In_ LPVOID paramer)
 	{
 		if (p->current_update_state == UPDATE_PIC)
 		{
-			p->update_pic(p->just_join_update_pic);
-			classItemUI *item = ManagerItem::getItem(p->just_join_update_pic.c_str());
-			if (!p->class_list[p->just_join_update_pic].path.empty() && Logan::file_exist(p->class_list[p->just_join_update_pic].path))
-				item->setImage(p->class_list[p->just_join_update_pic].path.c_str());
-			p->msg_coming(p->class_list[p->just_join_update_pic].name + "更新了头像");
-			p->current_update_state = UPDATE_NONE;
+			if (p->class_list.find(p->just_join_update_pic) != p->class_list.end())
+			{
+				p->update_pic(p->just_join_update_pic);
+				classItemUI *item = ManagerItem::getItem(p->just_join_update_pic.c_str());
+				if (!p->class_list[p->just_join_update_pic].path.empty() && Logan::file_exist(p->class_list[p->just_join_update_pic].path))
+					item->setImage(p->class_list[p->just_join_update_pic].path.c_str());
+				p->msg_coming(p->class_list[p->just_join_update_pic].name + "更新了头像");
+				p->current_update_state = UPDATE_NONE;
+			}
 		}
 		else if (p->current_update_state == UPDATE_NAME)
 		{
-			p->update_name(p->just_join_update_name);
-			classItemUI *item = ManagerItem::getItem(p->just_join_update_name.c_str());
-			item->setTitle(p->class_list[p->just_join_update_name].name.c_str());
-			p->msg_coming(p->class_list[p->just_join_update_name].name + "更新了名称");
-			p->current_update_state = UPDATE_NONE;
+			if (p->class_list.find(p->just_join_update_name) != p->class_list.end())
+			{
+				p->update_name(p->just_join_update_name);
+				classItemUI *item = ManagerItem::getItem(p->just_join_update_name.c_str());
+				item->setTitle(p->class_list[p->just_join_update_name].name.c_str());
+				p->msg_coming(p->class_list[p->just_join_update_name].name + "更新了名称");
+				p->current_update_state = UPDATE_NONE;
+			}
 		}
 		else if (p->current_update_state == UPDATE_MEM)
 		{
@@ -836,6 +866,38 @@ DWORD WINAPI releaseProc(_In_ LPVOID paramer)
 			Logan::logout(itor->first, user_list::user_name);
 		else
 			Logan::logout(itor->first, user_list::login_user);
+	}
+	return 0;
+}
+
+DWORD WINAPI syncProc(_In_ LPVOID paramer)
+{
+
+	MainView* p = static_cast<MainView*>(paramer);
+	while (p->need_sync)
+	{
+		Logan::Record_Info info = Logan::query_record_info(user_list::ip);
+		p->m_pRecordTime->SetText(info.time_long.c_str());
+		switch (info.state)
+		{
+		case Logan::E_pause:
+			p->m_pRecord->SetVisible(true);
+			p->m_pPause->SetVisible(false);
+			p->need_sync = false;
+			break;
+		case Logan::E_start:
+			p->m_pPause->SetVisible(true);
+			p->m_pRecord->SetVisible(false);
+			break;
+		case Logan::E_stop:
+			p->m_pRecord->SetVisible(true);
+			p->m_pPause->SetVisible(false);
+			p->need_sync = false;
+			break;
+		default:
+			break;
+		}
+		Sleep(1000);
 	}
 	return 0;
 }

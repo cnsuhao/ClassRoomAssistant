@@ -14,6 +14,7 @@
 #define UPDATE_MEM	3
 #define UPDATE_NONE -1
 
+#define TIME_ID_UPDATE_RECORD_TIME 4848
 
 #define  WM_REQUEST_JOIN	WM_USER+1000
 #define  WM_REQUEST_SPEAK	WM_USER+1001
@@ -155,7 +156,10 @@ private:
 	CVerticalLayoutUI	*m_pCalssLay;
 	CLabelUI *m_pStateOn, *m_pStateOff;
 	CVideoUI *m_pVideo;
+	CButtonUI	*m_pRecord, *m_pPause, *m_pStop;
+	CLabelUI	*m_pRecordTime;
 	small_video video_list[6];
+	bool need_sync;
 private:
 	ITCPClient *client;
 	std::stack<small_video> free_stack;// free stack to save free video list
@@ -206,9 +210,11 @@ private:
 	HANDLE init_thread;
 	HANDLE update_thread;
 	HANDLE release_thread;
+	HANDLE sync_thread;
 	friend DWORD WINAPI initProc(_In_ LPVOID paramer);
 	friend DWORD WINAPI updateProc(_In_ LPVOID paramer);
 	friend DWORD WINAPI releaseProc(_In_ LPVOID paramer);
+	friend DWORD WINAPI syncProc(_In_ LPVOID paramer);
 
 };
 

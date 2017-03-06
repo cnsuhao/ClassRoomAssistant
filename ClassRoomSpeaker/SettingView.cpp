@@ -1,7 +1,7 @@
 #include "SettingView.h"
 #include "../Src/IMyCurl.h"
 #include "../Src/LoginWnd.h"
-
+#include "../Src/CMyCharConver.h"
 SettingView::SettingView() :cfg(NULL), bnameUpdate(false)
 {
 
@@ -81,7 +81,7 @@ void SettingView::Notify(TNotifyUI& msg)
 				strcpy(fname, strFile);
 				PathStripPath(fname);
 				string path = user_list::ip + "/" + string(fname);
-				cfg->addValue("path", user_list::ip);
+				cfg->addValue("path",path, user_list::ip);
 				cfg->save();
 				CopyFileA(strFile, path.c_str(), FALSE);
 			}
@@ -143,9 +143,15 @@ void SettingView::SaveModify()
 	CEditUI *edit_name = static_cast<CEditUI*>(m_PaintManager.FindControl(_T("edit_name")));
 	if (bnameUpdate)
 	{
-		cfg->addValue("name", edit_name->GetText().GetData(),user_list::ip);
-		::PostMessageA(::GetParent(*this), WM_UPDATE_DEVNAME, NULL, NULL);
-		cfg->save();
+		cfg->addValue("name", edit_name->GetText().GetData(), user_list::ip);
+		string dev_name = cfg->getValue("name", user_list::ip);
+		OnUpdate_name(dev_name);
 		bnameUpdate = false;
 	}
+}
+void  SettingView::OnUpdate_name(std::string new_name)
+{
+	std::string requestUrl = "http://" + user_list::ip + "/" + user_list::cgi + "type=setdevname&name=" + CMyCharConver::ANSIToUTF8(new_name);
+	Logan::query_msg_node(requestUrl, user_list::ip);
+	::PostMessageA(::GetParent(*this), WM_UPDATE_DEVNAME, NULL, NULL);
 }

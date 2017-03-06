@@ -26,7 +26,7 @@
 						<HorizontalLayout>
 						<Video name="mainVideo" />
 						</HorizontalLayout>
-						<Progress name="progress_voice" height="5"  min="0" max="120"  hor="true" align="center" />
+						<Progress name="progress_voice" height="5" foreimage="progress.png" bkcolor="#FF383838" min="0" max="120"  hor="true" align="center" />
 					</VerticalLayout>
                     <VerticalLayout name="FunctionLay" bordersize="0" float="false" width="23">
                         <Container bordersize="0" float="false" />

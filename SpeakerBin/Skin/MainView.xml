@@ -5,7 +5,12 @@
     <Font name="微软雅黑" size="16" bold="false" italic="false" />
     <VerticalLayout name="MainLay" bordersize="0" float="false" width="60" height="30">
         <HorizontalLayout name="TitleLay" bordersize="0" float="false" height="50" bkcolor="#FF383838">
-            <Container bordersize="0" float="false" width="30" />
+            <Container bordersize="0" float="false" width="10"  />
+			<VerticalLayout width="20">
+				<Container  />
+				<Container bkimage="logo.png" width="20" height="20" />
+				<Container />
+			</VerticalLayout>
             <Label name="lab_title" text="讲课助手" bordersize="0" float="false" width="170" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
             <HorizontalLayout name="NotifyLay" bordersize="0" float="false" width="300">
                 <Label name="lab_notify_ico" bordersize="0" float="true" pos="1,20,0,0" width="13" height="11" bkimage="notify_ico.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
@@ -25,6 +30,10 @@
 						<HorizontalLayout>
 						<VerticalLayout width="23" />
 						<Video name="mainVideo" />
+						</HorizontalLayout>
+						<HorizontalLayout height="10">
+							<Progress name="progress_voice"  foreimage="progress.png" bkcolor="#FF383838" min="0" max="100"  hor="true" align="center" />
+							<Label name="record_time" text="00:00:00" textcolor="#FF00E5EE" width="60" height="10" />
 						</HorizontalLayout>
 					</VerticalLayout>
                     <VerticalLayout name="FunctionLay" bordersize="0" float="false" width="23">
@@ -226,6 +235,21 @@
                 <VerticalLayout name="CalssRoomListLay" bordersize="0" width="170" float="false" />
 				<VerticalLayout />
 				</HorizontalLayout>
+				<HorizontalLayout height="30">
+					<Container />
+					<Button name="btn_record" text="录制" textcolor="#FFFFFFFF" hotbkcolor="#ff21a1db" width="50" borderround="5,5" bkcolor="#ff171717" pushedbkcolor="#ff21a1ff" />
+					<Button name="btn_pause" text="暂停" textcolor="#FFFFFFFF" hotbkcolor="#ff21a1db" width="50" borderround="5,5" bkcolor="#ff171717" pushedbkcolor="#ff21a1ff" visible="false" />
+					<Container />
+					<Button name="btn_stop" text="停止" textcolor="#FFFFFFFF" hotbkcolor="#ff21a1db" width="50" borderround="5,5" bkcolor="#ff171717" pushedbkcolor="#ff21a1ff"  />
+					<Container />
+				</HorizontalLayout>
+				<VerticalLayout name="statusLay" bordersize="0" float="false" width="190" height="93">
+                    <Label name="lab_sep2" bordersize="0" float="false" height="1" bkcolor="#FFA0A0A4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="lab_class_status" bordersize="0" float="true" pos="21,6,0,0" width="148" height="29" bkimage="remote_off.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+					<Label name="lab_class_status_on" visible="false" bordersize="0" float="true" pos="21,6,0,0" width="148" height="29" bkimage="remote_on.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+                    <Label name="lab_date" text="2016-10-10" bordersize="0" float="true" pos="21,36,0,0" width="148" height="29" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
+                    <Label name="lab_time" text="16:33:55" bordersize="0" float="true" pos="21,65,0,0" width="148" height="29" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" align="center" />
+                </VerticalLayout>
             </VerticalLayout>
         </HorizontalLayout>
     </VerticalLayout>

@@ -87,7 +87,7 @@ void SettingView::Notify(TNotifyUI& msg)
 				strcpy(fname, strFile);
 				PathStripPath(fname);
 				string path = user_list::ip + "/" + string(fname);
-				cfg->addValue("path", user_list::ip);
+				cfg->addValue("path", path, user_list::ip);
 				cfg->save();
 				CopyFileA(strFile, path.c_str(), FALSE);
 			}

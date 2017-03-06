@@ -24,7 +24,7 @@
                             <Container bordersize="0" float="false" width="37" height="30" />
                             <Button bordersize="0" name="btn_upload" float="false" width="80" height="30" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="btn_upload_normal.png" hotimage="btn_upload_hot.png" pushedimage="btn_upload_pressed.png" />
                             <Label text="名称：" bordersize="0" float="false" width="60" height="30" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" align="center" />
-                            <Edit name="edit_name" borderround="5,5"  bordersize="0" float="false" bkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FF800080" align="center" />
+                            <Edit name="edit_name" borderround="5,5"  bordersize="0" float="false" bkcolor="#FF333333" nativebkcolor="#FF333333" textpadding="4,3,4,3" textcolor="#FFFFFFFF" disabledtextcolor="#FF800080" align="center" />
                         </HorizontalLayout>
                     </VerticalLayout>
                 </HorizontalLayout>

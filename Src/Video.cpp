@@ -8,12 +8,21 @@ CVideoWnd::CVideoWnd() :m_pOwner(NULL), click_tick(0)
 }
 
 
-CVideoUI::CVideoUI(void) :m_pwindows(NULL),is_full(false)
+CVideoUI::CVideoUI(void) :m_pwindows(NULL), is_full(false), media_play(NULL)
 {
 }
 
 CVideoUI::~CVideoUI(void)
 {
+	if (media_play)
+	{
+		if (is_playing())
+		{
+			media_play->Stop();
+		}
+		media_play->SetListener(NULL);
+		ILivePlayer::ReleaseInstance(media_play);
+	}
 	delete m_pwindows;
 }
 
@@ -33,7 +42,6 @@ void CVideoWnd::Init(CVideoUI* pOwner)
 	rcpos.bottom+=rcwnd.top;
 	Create(m_pOwner->GetManager()->GetPaintWindow(),NULL,WS_CHILD|WS_EX_TOPMOST  | WS_VISIBLE,0,rcpos);
 	::ShowWindow(m_hWnd,SW_SHOW);
-
 	/* set timer*/
 	SetTimer(*this, 3692, 1000, NULL);
 }
@@ -127,9 +135,6 @@ void CVideoUI::Init()
 		ASSERT(m_pwindows);
 		m_pwindows->Init(this);
 	}	
-	media_play = ILivePlayer::GetInstance();
-	media_play->SetHWND(getHwnd());
-	media_play->SetListener(this);
 }
 
 void CVideoUI::fullSrc()
@@ -156,6 +161,8 @@ void CVideoUI::HandlePlayerMsg(int nMsg, WPARAM wParam /* = 0 */, LPARAM lParam 
 	case PlayerMsg_Volume :
 		m_volume = wParam;
 		m_pManager->SendNotify(this, _T("volume_change"));
+		sprintf(str, "%d\n", wParam);
+		OutputDebugStringA(str);
 		break;
 	case PlayerMsg_File:
 		OutputDebugStringA("Player::[PlayerMsg_File]\n");
@@ -181,20 +188,22 @@ void CVideoUI::HandlePlayerMsg(int nMsg, WPARAM wParam /* = 0 */, LPARAM lParam 
 
 bool CVideoUI::play(std::string url)
 {
-	if (!media_play->Load(url))
+	if (!media_play)
 	{
-	Sleep(300);
-	return media_play->Load(url);
+		media_play = ILivePlayer::GetInstance();
+		media_play->SetHWND(getHwnd());
+		media_play->SetListener(this);
 	}
-	return true;
-	
+	return media_play->Load(url);
+	//return false;
 }
 
 void CVideoUI::stop()
 {
+	media_play->SetListener(NULL);
 	media_play->Stop();
-	Sleep(500);
-	m_pwindows->PainBk();
+	ILivePlayer::ReleaseInstance(media_play);
+	media_play = NULL;
 }
 void CVideoUI::setVolume(int volume)
 {
